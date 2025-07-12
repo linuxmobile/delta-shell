@@ -1,0 +1,104 @@
+import { Gtk } from "ags/gtk4";
+import { range } from "../../../utils/utils";
+import AstalHyprland from "gi://AstalHyprland?version=0.1";
+import AstalApps from "gi://AstalApps?version=0.1";
+import { createBinding, createComputed, For } from "ags";
+import options from "@/options";
+const hyprland = AstalHyprland.get_default();
+
+type AppButtonProps = {
+   app?: AstalApps.Application;
+   client: AstalHyprland.Client;
+};
+
+const application = new AstalApps.Apps();
+
+function AppButton({ app, client }: AppButtonProps) {
+   const classes = createBinding(hyprland, "focusedClient").as((fcsClient) => {
+      const classes = ["taskbar-button"];
+      if (!fcsClient || !client.class || !fcsClient.pid) return classes;
+      const isFocused = fcsClient.pid === client?.pid;
+      if (isFocused) classes.push("focused");
+      return classes;
+   });
+
+   const hasWindow = createBinding(hyprland, "clients").as((clients) =>
+      clients
+         .map((e) => e.class.toLowerCase())
+         .includes(client.class.toLowerCase()),
+   );
+
+   return (
+      <button onClicked={() => client.focus()} cssClasses={classes}>
+         <overlay>
+            <image
+               $type="overlay"
+               tooltipText={client.title}
+               halign={Gtk.Align.CENTER}
+               valign={Gtk.Align.CENTER}
+               iconName={app ? app.iconName : client.class}
+               pixelSize={18}
+            />
+            <box
+               class="indicator"
+               valign={options.bar.position.as((p) =>
+                  p === "top" ? Gtk.Align.START : Gtk.Align.END,
+               )}
+               halign={Gtk.Align.CENTER}
+               visible={hasWindow}
+            />
+         </overlay>
+      </button>
+   );
+}
+
+function WorkspaceButton({ ws }: { ws: AstalHyprland.Workspace }) {
+   const clients = createBinding(hyprland, "clients").as((clients) =>
+      clients
+         .filter((w) => w.workspace.id == ws.id)
+         .sort((a, b) => a.pid - b.pid),
+   );
+
+   const classNames = createBinding(hyprland, "focusedWorkspace").as((fws) => {
+      const classes = ["workspace-container"];
+
+      const active = fws.id == ws.id;
+      active && classes.push("active");
+
+      return classes;
+   });
+
+   return (
+      <box cssClasses={classNames}>
+         <button class={"workspace-button"} onClicked={() => ws.focus()}>
+            <label label={ws.id.toString()} />
+         </button>
+         <For each={clients}>
+            {(client) => {
+               for (const app of application.list) {
+                  if (
+                     client.class &&
+                     app.entry
+                        .split(".desktop")[0]
+                        .toLowerCase()
+                        .match(client.class.toLowerCase())
+                  ) {
+                     return <AppButton app={app} client={client} />;
+                  }
+               }
+               return <AppButton client={client} />;
+            }}
+         </For>
+      </box>
+   );
+}
+
+export function Workspaces_Hypr() {
+   return (
+      <box spacing={options.bar.spacing} class={"workspaces"}>
+         {range(3).map((i) => (
+            <WorkspaceButton ws={AstalHyprland.Workspace.dummy(i + 1, null)} />
+         ))}
+      </box>
+   );
+}

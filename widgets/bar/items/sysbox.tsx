@@ -1,0 +1,75 @@
+import AstalBattery from "gi://AstalBattery";
+import AstalNetwork from "gi://AstalNetwork";
+import AstalBluetooth from "gi://AstalBluetooth";
+import AstalNotifd from "gi://AstalNotifd?version=0.1";
+import {
+   icons,
+   VolumeIcon,
+   BatteryIcon,
+   getNetworkIconBinding,
+} from "@/utils/icons";
+import app from "ags/gtk4/app";
+import { createBinding, createComputed, onCleanup } from "ags";
+import options from "@/options";
+
+export function SysBox() {
+   const battery = AstalBattery.get_default();
+   const bluetooth = AstalBluetooth.get_default();
+   const network = AstalNetwork.get_default();
+   const notifd = AstalNotifd.get_default();
+   let appconnect: number;
+
+   onCleanup(() => {
+      if (appconnect) app.disconnect(appconnect);
+   });
+
+   const deviceConnected = createComputed(
+      [
+         createBinding(bluetooth, "devices"),
+         createBinding(bluetooth, "isConnected"),
+      ],
+      (d, _) => {
+         for (const device of d) {
+            if (device.connected) return true;
+         }
+         return false;
+      },
+   );
+
+   return (
+      <button
+         onClicked={() => app.toggle_window(options.control.name)}
+         cssClasses={["bar-item", "sysbox"]}
+         $={(self) => {
+            appconnect = app.connect("window-toggled", (_, win) => {
+               const winName = win.name;
+               const visible = win.visible;
+
+               if (winName == options.control.name) {
+                  self[visible ? "add_css_class" : "remove_css_class"](
+                     "active",
+                  );
+               }
+            });
+         }}
+      >
+         <box spacing={8}>
+            <image
+               visible={createBinding(network.wifi, "enabled")}
+               pixelSize={20}
+               iconName={getNetworkIconBinding()}
+            />
+            <image
+               visible={deviceConnected((v) => v)}
+               iconName={icons.bluetooth}
+            />
+            <image iconName={VolumeIcon} pixelSize={20} />
+            <image
+               visible={createBinding(battery, "isPresent")}
+               pixelSize={20}
+               iconName={BatteryIcon}
+            />
+         </box>
+      </button>
+   );
+}

@@ -1,0 +1,141 @@
+window#calendar {
+   all: unset;
+   color: $fg0;
+
+   .calendar-main {
+      background: $bg0;
+      padding: $widget-main-padding;
+      border-radius: $widget-main-radius;
+      border: 1px solid $border-color;
+   }
+
+   .calendar-button,
+   .weekdays button {
+      background: transparent;
+      font-weight: normal;
+      outline: none;
+      border-radius: $widget-radius;
+      padding: 0;
+      min-width: 45px;
+      min-height: 45px;
+
+      &:hover {
+         transition: $transition-background;
+         background: $bg1;
+      }
+      &:focus {
+         transition: 0s;
+         outline-offset: -$outline-width;
+         outline: $outline-width solid $outline-color;
+      }
+   }
+   .calendar-button-weekend {
+      color: $red1;
+   }
+
+   .monthshift,
+   .monthyear {
+      border-radius: $widget-radius;
+      background: $bg1;
+      font-weight: normal;
+      outline: none;
+      padding: 0;
+      min-height: 45px;
+      min-width: 45px;
+
+      &:hover {
+         transition: $transition-background;
+         background: $bg2;
+      }
+      &:focus {
+         transition: 0s;
+         outline-offset: -$outline-width;
+         outline: $outline-width solid $outline-color;
+      }
+   }
+
+   .monthyear {
+      padding: 0 10px;
+   }
+
+   .calendar-button-today {
+      background: $accent1;
+      color: $bg0;
+
+      &:hover {
+         background: $accent1;
+      }
+   }
+
+   .calendar-button-other-month {
+      color: $fg2;
+   }
+
+   header {
+      border: none;
+      background: $bg1;
+
+      button {
+         border-radius: $widget-radius;
+         background: transparent;
+         font-weight: normal;
+         outline: none;
+         padding: 0;
+         min-height: 45px;
+         min-width: 45px;
+
+         &:hover {
+            background-color: $bg2;
+            background-image: unset;
+         }
+      }
+   }
+
+   grid {
+      .day-number {
+         background: transparent;
+         font-weight: normal;
+         outline: none;
+         border-radius: $widget-radius;
+         padding: 0;
+         min-width: 40px;
+         min-height: 45px;
+
+         &:hover {
+            transition: $transition-background;
+            background: $bg1;
+         }
+
+         &:focus {
+            transition: 0s;
+            outline-offset: -$outline-width;
+            outline: $outline-width solid $outline-color;
+         }
+
+         &.other-month {
+            color: $fg2;
+         }
+
+         &.today {
+            background: $accent1;
+            color: $bg0;
+            border: none;
+         }
+      }
+
+      .day-name {
+         background: transparent;
+         font-weight: normal;
+         outline: none;
+         border-radius: $widget-radius;
+         padding: 0;
+         min-width: 40px;
+         min-height: 45px;
+
+         &:hover {
+            transition: $transition-background;
+            background: $bg1;
+         }
+      }
+   }
+}

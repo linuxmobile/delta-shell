@@ -1,0 +1,142 @@
+import AstalMpris from "gi://AstalMpris?version=0.1";
+import { icons } from "../../../utils/icons";
+import Pango from "gi://Pango?version=1.0";
+import { Gtk } from "ags/gtk4";
+import Gio from "gi://Gio?version=2.0";
+import { createBinding, For } from "ags";
+import Adw from "gi://Adw?version=1";
+import options from "@/options";
+const mpris = AstalMpris.get_default();
+
+function MediaPlayer({ player }: { player: AstalMpris.Player }) {
+   const title = createBinding(player, "title").as((t) => t || "Unknown Track");
+   const artist = createBinding(player, "artist").as(
+      (a) => a || "Unknown Artist",
+   );
+   const coverArt = createBinding(player, "coverArt").as((c) =>
+      Gio.file_new_for_path(c || options.control.default_coverArt),
+   );
+   const playIcon = createBinding(player, "playbackStatus").as((s) =>
+      s === AstalMpris.PlaybackStatus.PLAYING
+         ? icons.ui.player.pause
+         : icons.ui.player.play,
+   );
+
+   const PlayerTitle = () => (
+      <label
+         label={title}
+         class={"title"}
+         hexpand
+         ellipsize={Pango.EllipsizeMode.END}
+         halign={Gtk.Align.START}
+         maxWidthChars={30}
+      />
+   );
+
+   const PlayerIcon = () => (
+      <image iconName={icons.ui.player.icon} pixelSize={22} />
+   );
+
+   const PlayerArtist = () => (
+      <label
+         label={artist}
+         halign={Gtk.Align.START}
+         valign={Gtk.Align.CENTER}
+         ellipsize={Pango.EllipsizeMode.END}
+         maxWidthChars={35}
+      />
+   );
+
+   const ButtonPrev = () => (
+      <button
+         onClicked={() => player.previous()}
+         focusOnClick={false}
+         visible={createBinding(player, "canGoPrevious")}
+         iconName={icons.ui.player.prev}
+      >
+         <image iconName={icons.ui.player.prev} pixelSize={22} />
+      </button>
+   );
+
+   const ButtonPlay = () => (
+      <button
+         onClicked={() => player.play_pause()}
+         focusOnClick={false}
+         visible={createBinding(player, "canControl")}
+      >
+         <image iconName={playIcon} pixelSize={22} />
+      </button>
+   );
+
+   const ButtonNext = () => (
+      <button
+         onClicked={() => player.next()}
+         focusOnClick={false}
+         visible={createBinding(player, "canGoNext")}
+      >
+         <image iconName={icons.ui.player.next} pixelSize={22} />
+      </button>
+   );
+
+   const Buttons = () => (
+      <box spacing={10} valign={Gtk.Align.END} vexpand>
+         <ButtonPrev />
+         <ButtonPlay />
+         <ButtonNext />
+      </box>
+   );
+
+   const Content = () => (
+      <box
+         $type="overlay"
+         orientation={Gtk.Orientation.VERTICAL}
+         class={"mediaplayer"}
+         spacing={10}
+      >
+         <box class={"title"}>
+            <PlayerTitle />
+            <PlayerIcon />
+         </box>
+         <PlayerArtist />
+         <box class={"actions"}>
+            <box hexpand />
+            <Buttons />
+         </box>
+      </box>
+   );
+
+   const PlayerArt = () => (
+      <Gtk.ScrolledWindow canFocus={false} opacity={0.5}>
+         <Gtk.Picture
+            file={coverArt}
+            class={"mediaplayer-art"}
+            contentFit={Gtk.ContentFit.COVER}
+         />
+      </Gtk.ScrolledWindow>
+   );
+
+   return (
+      <overlay heightRequest={130} hexpand class={"mediaplayer-lower"}>
+         <PlayerArt />
+         <Content />
+      </overlay>
+   );
+}
+
+export function MprisPlayers() {
+   const list = createBinding(mpris, "players");
+
+   return (
+      <box
+         spacing={10}
+         orientation={Gtk.Orientation.VERTICAL}
+         visible={list.as((players) => players.length !== 0)}
+      >
+         <Adw.Carousel spacing={options.theme.spacing}>
+            <For each={list}>
+               {(player: AstalMpris.Player) => <MediaPlayer player={player} />}
+            </For>
+         </Adw.Carousel>
+      </box>
+   );
+}

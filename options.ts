@@ -1,0 +1,114 @@
+import { Astal } from "ags/gtk4";
+import { mkOptions, opt } from "./utils/options";
+import GLib from "gi://GLib?version=2.0";
+import { createState } from "ags";
+import { getWallpaper } from "./services/wallpaper";
+export const configDir = GLib.get_user_config_dir();
+
+const options = mkOptions(`${configDir}/delta-shell/config.json`, {
+   theme: {
+      bg: {
+         0: opt("#1d1d20"),
+         1: opt("#28282c"),
+         2: opt("#36363a"),
+         3: opt("#48484b"),
+      },
+      fg: {
+         0: opt("#ffffff"),
+         1: opt("#c0c0c0"),
+         2: opt("#808080"),
+      },
+      accent: opt<
+         | "blue"
+         | "teel"
+         | "green"
+         | "yellow"
+         | "orange"
+         | "red"
+         | "purple"
+         | "slate"
+      >("yellow"),
+      blue: opt("#3584e4"),
+      teel: opt("#2190a4"),
+      green: opt("#3a944a"),
+      yellow: opt("#c88800"),
+      orange: opt("#ed5b00"),
+      red: opt("#e62d42"),
+      purple: opt("#9141ac"),
+      slate: opt("#6f8396"),
+      border: {
+         width: opt(1),
+      },
+      outline: {
+         width: opt(1),
+      },
+      main_padding: opt(15),
+      spacing: opt(10),
+      radius: opt(0),
+   },
+   transition: opt(200),
+   font: {
+      size: opt(12),
+      name: opt("Rubik"),
+   },
+   bar: {
+      name: "bar",
+      spacing: opt(6),
+      height: opt(52),
+      position: opt<"top" | "bottom">("top"),
+      date: {
+         format: opt("%b %d  %H:%M"),
+      },
+   },
+   control: {
+      name: "control",
+      page: opt<"main" | "network" | "bluetooth" | "powermode">("main"),
+      default_coverArt: `${SRC}/assets/defsong.jpg`,
+      width: opt(500),
+      margin: opt(10),
+   },
+   launcher: {
+      name: "launcher",
+      page: opt<"apps" | "clipboard">("apps"),
+      width: opt(500),
+      margin: opt(10),
+   },
+   osd: {
+      name: "osd",
+      width: opt(300),
+      margin: opt(10),
+   },
+   calendar: {
+      name: "calendar",
+      margin: opt(10),
+   },
+   desktop: {
+      name: "desktop",
+      wallpaper: {
+         path: opt(getWallpaper()),
+      },
+   },
+   powermenu: {
+      name: "powermenu",
+   },
+   verification: {
+      name: "verification",
+   },
+   notifications_popup: {
+      name: "notifications_popup",
+      timeout: opt(3000),
+      margin: opt(10),
+   },
+});
+
+export const [compositor, compositor_set] = createState<string>("");
+
+function getCompositor() {
+   const env = GLib.getenv("XDG_SESSION_DESKTOP");
+   if (env === "Hyprland") compositor_set("hyprland");
+   else if (env === "niri") compositor_set("niri");
+   else compositor_set("unknown");
+}
+getCompositor();
+
+export default options;

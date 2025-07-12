@@ -1,0 +1,136 @@
+window#bar {
+  all: unset;
+  background: $bg0;
+  color: $fg0;
+
+  tooltip {
+    background: $bg0;
+    border: $border-width solid $border-color;
+    border-radius: $widget-radius;
+  }
+
+  @if $bar-position == "top" {
+    border-bottom: $border-width solid $border-color;
+  }
+
+  @if $bar-position == "bottom" {
+    border-top: $border-width solid $border-color;
+  }
+
+  .bar-main {
+    padding: 6px;
+  }
+
+  .bar-item {
+    background: transparent;
+    font-weight: normal;
+    border-radius: $widget-radius;
+    padding: 0 10px;
+
+    &:hover {
+      background: $bg1;
+      transition: $transition-background;
+    }
+
+    &.active {
+      background: $bg2;
+      transition: $transition-background;
+    }
+  }
+
+  @keyframes blink {
+    to {
+      background: $red1;
+    }
+  }
+
+  .record-indicator {
+    background: $fg0;
+    min-height: 15px;
+    min-width: 15px;
+    border-radius: 99px;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  .tray {
+    background: transparent;
+
+    .menu {
+      &.menu > contents {
+        background: $bg0;
+        margin-top: 5px;
+        border: $border-width solid $bg1;
+        box-shadow: none;
+      }
+
+      &.menu > arrow {
+        all: unset;
+      }
+    }
+
+    .bar-item {
+      padding: 0;
+
+      button {
+        background: transparent;
+      }
+    }
+
+    .tray-toggle {
+      padding: 0 10px;
+    }
+  }
+
+  .workspaces {
+    background: $bg0;
+
+    .workspace-container {
+      border-radius: $widget-radius;
+      padding: 0 5px;
+      &:hover {
+        background: $bg1;
+        transition: $transition-background;
+
+        &.occupied {
+          background: $bg1;
+        }
+      }
+
+      &.active {
+        transition: $transition-background;
+        background: $bg2;
+      }
+    }
+
+    .workspace-button {
+      font-weight: normal;
+      color: $fg0;
+      background: transparent;
+      padding: 0 8px;
+    }
+  }
+
+  .taskbar-button {
+    background: transparent;
+    padding: 0 10px;
+
+    &.focused {
+      .indicator {
+        transition: $transition-background;
+        background: $accent1;
+      }
+    }
+
+    .indicator {
+      border-radius: $widget-radius;
+      min-width: 4px;
+      min-height: 4px;
+      background: $bg3;
+      transition: min-width 0.3s ease-in-out;
+    }
+  }
+}
