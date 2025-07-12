@@ -2,7 +2,7 @@ import { Astal, Gtk } from "ags/gtk4";
 import AstalNiri from "gi://AstalNiri";
 import AstalApps from "gi://AstalApps";
 import { createBinding, createComputed, For } from "ags";
-import options from "@/options";
+import options, { compositor } from "@/options";
 const niri = AstalNiri.get_default();
 
 type AppButtonProps = {

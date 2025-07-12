@@ -1,3 +1,4 @@
+import options from "@/options";
 import ScreenRecord from "@/services/screenrecord";
 import { createBinding } from "ags";
 import { Gtk } from "ags/gtk4";
@@ -10,7 +11,7 @@ export function RecordIndicator() {
          visible={createBinding(screenRecord, "recording")}
          onClicked={() => screenRecord.stop().catch(() => "")}
       >
-         <box spacing={10}>
+         <box spacing={options.bar.spacing}>
             <box class={"record-indicator"} valign={Gtk.Align.CENTER} />
             <label
                label={createBinding(screenRecord, "timer").as((time) => {

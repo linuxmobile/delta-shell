@@ -94,11 +94,13 @@ function WorkspaceButton({ ws }: { ws: AstalHyprland.Workspace }) {
 }
 
 export function Workspaces_Hypr() {
+   const workspaces = createBinding(hyprland, "workspaces").as((workspaces) =>
+      workspaces.sort((a, b) => a.id - b.id),
+   );
+
    return (
       <box spacing={options.bar.spacing} class={"workspaces"}>
-         {range(3).map((i) => (
-            <WorkspaceButton ws={AstalHyprland.Workspace.dummy(i + 1, null)} />
-         ))}
+         <For each={workspaces}>{(ws) => <WorkspaceButton ws={ws} />}</For>
       </box>
    );
 }

@@ -1,29 +1,20 @@
 import app from "ags/gtk4/app";
 import { Astal, Gdk } from "ags/gtk4";
-const { name, position, spacing } = options.bar;
-
+import { Workspaces } from "./items/workspaces";
 import { Clock } from "./items/clock";
 import { Launcher } from "./items/launcher";
 import { SysBox } from "./items/sysbox";
 import { Tray } from "./items/tray";
-import { Keyboard_Niri } from "./items/keyboard_niri";
-import { Keyboard_Hypr } from "./items/keyboard_hypr";
-import { Workspaces_Niri } from "./items/workspaces_niri";
-import { Workspaces_Hypr } from "./items/workspaces_hypr";
 import { RecordIndicator } from "./items/recordindicator";
+import { Keyboard } from "./items/keyboard";
 import options, { compositor } from "@/options";
+const { name, position, spacing } = options.bar;
 
 function Start() {
    return (
       <box $type="start" spacing={spacing}>
          <Launcher />
-         {compositor.get() === "niri" ? (
-            <Workspaces_Niri />
-         ) : compositor.get() === "hyprland" ? (
-            <Workspaces_Hypr />
-         ) : (
-            <box />
-         )}
+         <Workspaces />
       </box>
    );
 }
@@ -41,13 +32,7 @@ function End() {
       <box $type="end" spacing={spacing}>
          <RecordIndicator />
          <Tray />
-         {compositor.get() === "niri" ? (
-            <Keyboard_Niri />
-         ) : compositor.get() === "hyprland" ? (
-            <Keyboard_Hypr />
-         ) : (
-            <box />
-         )}
+         <Keyboard />
          <SysBox />
       </box>
    );

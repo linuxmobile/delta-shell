@@ -2,9 +2,9 @@ import AstalTray from "gi://AstalTray?version=0.1";
 import { icons } from "../../../utils/icons";
 import { Gtk } from "ags/gtk4";
 import { createBinding, createState, For } from "ags";
+const tray = AstalTray.get_default();
 
 export const Tray = () => {
-   const tray = AstalTray.get_default();
    const [tray_visible, tray_visible_set] = createState(false);
    const items = createBinding(tray, "items");
 

@@ -11,19 +11,19 @@ import {
 import app from "ags/gtk4/app";
 import { createBinding, createComputed, onCleanup } from "ags";
 import options from "@/options";
+const battery = AstalBattery.get_default();
+const bluetooth = AstalBluetooth.get_default();
+const network = AstalNetwork.get_default();
+const notifd = AstalNotifd.get_default();
 
 export function SysBox() {
-   const battery = AstalBattery.get_default();
-   const bluetooth = AstalBluetooth.get_default();
-   const network = AstalNetwork.get_default();
-   const notifd = AstalNotifd.get_default();
    let appconnect: number;
 
    onCleanup(() => {
       if (appconnect) app.disconnect(appconnect);
    });
 
-   const deviceConnected = createComputed(
+   const bluetoothconnected = createComputed(
       [
          createBinding(bluetooth, "devices"),
          createBinding(bluetooth, "isConnected"),
@@ -59,10 +59,7 @@ export function SysBox() {
                pixelSize={20}
                iconName={getNetworkIconBinding()}
             />
-            <image
-               visible={deviceConnected((v) => v)}
-               iconName={icons.bluetooth}
-            />
+            <image visible={bluetoothconnected} iconName={icons.bluetooth} />
             <image iconName={VolumeIcon} pixelSize={20} />
             <image
                visible={createBinding(battery, "isPresent")}

@@ -105,10 +105,15 @@ export const [compositor, compositor_set] = createState<string>("");
 
 function getCompositor() {
    const env = GLib.getenv("XDG_SESSION_DESKTOP");
-   if (env === "Hyprland") compositor_set("hyprland");
-   else if (env === "niri") compositor_set("niri");
-   else compositor_set("unknown");
+   switch (env) {
+      case "niri":
+         return "niri";
+      case "Hyprland":
+         return "Hyprland";
+      default:
+         return "unknown";
+   }
 }
-getCompositor();
+compositor_set(getCompositor());
 
 export default options;
