@@ -2,7 +2,6 @@ import { Astal } from "ags/gtk4";
 import { mkOptions, opt } from "./utils/options";
 import GLib from "gi://GLib?version=2.0";
 import { createState } from "ags";
-import { getWallpaper } from "./services/wallpaper";
 export const configDir = GLib.get_user_config_dir();
 
 const options = mkOptions(`${configDir}/delta-shell/config.json`, {
@@ -81,12 +80,6 @@ const options = mkOptions(`${configDir}/delta-shell/config.json`, {
    calendar: {
       name: "calendar",
       margin: opt(10),
-   },
-   desktop: {
-      name: "desktop",
-      wallpaper: {
-         path: opt(getWallpaper()),
-      },
    },
    powermenu: {
       name: "powermenu",

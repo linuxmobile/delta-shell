@@ -6,7 +6,6 @@ import Calendar from "./widgets/calendar/calendar";
 import Powermenu from "./widgets/powermenu/powermenu";
 import Verification from "./widgets/powermenu/verification";
 import { NotificationPopup } from "./widgets/notifications/notificationpopup";
-import Desktop from "./widgets/desktop/desktop";
 import app from "ags/gtk4/app";
 import options from "./options";
 
@@ -28,5 +27,4 @@ export default [
    Powermenu,
    Verification,
    Calendar,
-   Desktop,
 ];
