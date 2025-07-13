@@ -75,6 +75,7 @@ const options = mkOptions(`${configDir}/delta-shell/config.json`, {
    osd: {
       name: "osd",
       width: opt(300),
+      timeout: opt(3000),
       margin: opt(10),
    },
    calendar: {

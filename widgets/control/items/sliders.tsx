@@ -4,6 +4,7 @@ import { Gtk } from "ags/gtk4";
 import AstalWp from "gi://AstalWp?version=0.1";
 import Brightness from "@/services/brightness";
 import options from "@/options";
+import { dependencies } from "@/utils/utils";
 const brightness = Brightness.get_default();
 
 function BrightnessBox() {
@@ -71,7 +72,7 @@ export function Sliders() {
          class={"sliders"}
       >
          <VolumeBox />
-         <BrightnessBox />
+         {dependencies("brightnessctl") && <BrightnessBox />}
       </box>
    );
 }

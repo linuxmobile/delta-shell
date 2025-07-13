@@ -1,9 +1,10 @@
 import { exec, execAsync } from "ags/process";
 import GObject, { register, getter, setter } from "ags/gobject";
 import { monitorFile, readFileAsync } from "ags/file";
+import { bash } from "@/utils/utils";
 
 const get = (args: string) => Number(exec(`brightnessctl ${args}`));
-const screen = exec(`bash -c "ls -w1 /sys/class/backlight | head -1"`);
+const screen = bash("ls -w1 /sys/class/backlight | head -1");
 
 @register({ GTypeName: "Brightness" })
 export default class Brightness extends GObject.Object {
@@ -28,12 +29,10 @@ export default class Brightness extends GObject.Object {
 
       if (percent > 1) percent = 1;
 
-      execAsync(`brightnessctl set ${Math.floor(percent * 100)}% -q`).then(
-         () => {
-            this.#screen = percent;
-            this.notify("screen");
-         },
-      );
+      bash(`brightnessctl set ${Math.floor(percent * 100)}% -q`).then(() => {
+         this.#screen = percent;
+         this.notify("screen");
+      });
    }
 
    constructor() {

@@ -2,7 +2,7 @@ import Pango from "gi://Pango";
 import Gtk from "gi://Gtk";
 import AstalNotifd from "gi://AstalNotifd";
 import GLib from "gi://GLib?version=2.0";
-import { isIcon, fileExists } from "../../utils/utils";
+import { isIcon, fileExists } from "@/utils/utils";
 import Gio from "gi://Gio?version=2.0";
 import options from "@/options";
 

@@ -26,7 +26,7 @@ function OnScreenProgress({ visible }: { visible: Accessor<boolean> }) {
       iconName_set(icon);
       count++;
 
-      timeout(2000, () => {
+      timeout(options.osd.timeout.get(), () => {
          count--;
          if (count === 0) visible_set(false);
       });
@@ -72,7 +72,7 @@ function OnScreenProgress({ visible }: { visible: Accessor<boolean> }) {
    );
 }
 
-export default function OSD(gdkmonitor: Gdk.Monitor) {
+export default function (gdkmonitor: Gdk.Monitor) {
    const { BOTTOM, TOP } = Astal.WindowAnchor;
 
    return (
@@ -81,7 +81,7 @@ export default function OSD(gdkmonitor: Gdk.Monitor) {
          name={name}
          application={app}
          exclusivity={Astal.Exclusivity.IGNORE}
-         anchor={options.bar.position.get() === "top" ? BOTTOM : TOP}
+         anchor={options.bar.position.as((p) => (p === "top" ? BOTTOM : TOP))}
          layer={Astal.Layer.OVERLAY}
          visible={visible((v) => v)}
       >
