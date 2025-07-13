@@ -3,6 +3,7 @@ import { readFile, writeFile, monitorFile, readFileAsync } from "ags/file";
 import { cacheDir, ensureDirectory } from "./utils";
 import Gio from "gi://Gio?version=2.0";
 import GLib from "gi://GLib?version=2.0";
+import { resetCss } from "@/services/styles";
 
 type GenericObject = Record<string, any>;
 
@@ -135,6 +136,32 @@ function transformObject(obj: any, initial?: boolean): any {
    return length > 0 ? newObj : undefined;
 }
 
+function deepMerge(target: any, source: any): any {
+   if (typeof target !== "object" || target === null) {
+      return source;
+   }
+
+   if (typeof source !== "object" || source === null) {
+      return source;
+   }
+
+   const result = Array.isArray(target) ? [] : { ...target };
+
+   for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+         if (Array.isArray(source[key])) {
+            result[key] = [...source[key]];
+         } else if (typeof source[key] === "object" && source[key] !== null) {
+            result[key] = deepMerge(target[key], source[key]);
+         } else {
+            result[key] = source[key];
+         }
+      }
+   }
+
+   return result;
+}
+
 export function mkOptions<T extends GenericObject>(
    configFile: string,
    object: T,
@@ -148,6 +175,7 @@ export function mkOptions<T extends GenericObject>(
 
    ensureDirectory(configFile.split("/").slice(0, -1).join("/"));
    const defaultConfig = transformObject(object, true);
+   const configVar = new Variable<GenericObject>(transformObject(object));
 
    if (GLib.file_test(configFile, GLib.FileTest.EXISTS)) {
       let configData: GenericObject;
@@ -156,6 +184,50 @@ export function mkOptions<T extends GenericObject>(
       } catch {
          configData = {};
       }
+   }
+
+   const hotReload = getNestedValue(object, "hot_reload")?.get();
+
+   function updateConfig(
+      oldConfig: GenericObject,
+      newConfig: GenericObject,
+      path = "",
+   ): void {
+      for (const key in newConfig) {
+         if (!Object.prototype.hasOwnProperty.call(newConfig, key)) continue;
+
+         const fullPath = path ? `${path}.${key}` : key;
+         if (
+            typeof newConfig[key] === "object" &&
+            !Array.isArray(newConfig[key])
+         ) {
+            updateConfig(oldConfig[key], newConfig[key], fullPath);
+         } else if (
+            JSON.stringify(oldConfig[key]) !== JSON.stringify(newConfig[key])
+         ) {
+            const conf = getOptions(object).find((c) => c.id === fullPath);
+            console.log(`${fullPath} updated`);
+            if (conf) {
+               const newC = configVar.get();
+               setNestedValue(newC, fullPath, newConfig[key]);
+               configVar.set(newC);
+               conf.set(newConfig[key]);
+            }
+         }
+      }
+   }
+
+   if (hotReload) {
+      monitorFile(configFile, (_, event) => {
+         let cache: GenericObject;
+         try {
+            cache = JSON.parse(readFile(configFile) || "{}");
+         } catch {
+            cache = {};
+         }
+         updateConfig(configVar.get(), deepMerge(defaultConfig, cache));
+         resetCss();
+      });
    }
 
    return Object.assign(object, {
