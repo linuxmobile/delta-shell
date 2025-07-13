@@ -5,29 +5,30 @@ import app from "ags/gtk4/app";
 import Graphene from "gi://Graphene?version=1.0";
 import { AppLauncher } from "./pages/applauncher";
 import { Clipboard } from "./pages/clipboard";
-import { hide_all_windows } from "../../windows";
+import { hide_all_windows } from "@/windows";
 import Adw from "gi://Adw?version=1";
 import options from "@/options";
-
 const { name, page, width, margin } = options.launcher;
 
-const Launcher = () => (
-   <stack
-      class="launcher-main"
-      widthRequest={width}
-      transitionDuration={options.transition}
-      transitionType={Gtk.StackTransitionType.SLIDE_LEFT_RIGHT}
-      visibleChildName={page.as((p) => p)}
-   >
-      <AppLauncher />
-      <Clipboard />
-   </stack>
-);
+function Launcher() {
+   return (
+      <stack
+         class="launcher-main"
+         widthRequest={width}
+         transitionDuration={options.transition}
+         transitionType={Gtk.StackTransitionType.SLIDE_LEFT_RIGHT}
+         visibleChildName={page}
+      >
+         <AppLauncher />
+         <Clipboard />
+      </stack>
+   );
+}
 
-export default (gdkmonitor: Gdk.Monitor) => {
+export default function (gdkmonitor: Gdk.Monitor) {
    const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor;
    let win: Astal.Window;
-   let contentbox: Gtk.Box;
+   let contentbox: Adw.Clamp;
 
    function onKey(
       _e: Gtk.EventControllerKey,
@@ -65,16 +66,16 @@ export default (gdkmonitor: Gdk.Monitor) => {
       >
          <Gtk.EventControllerKey onKeyPressed={onKey} />
          <Gtk.GestureClick onPressed={onClick} />
-         <box
+         <Adw.Clamp
             $={(ref) => (contentbox = ref)}
             halign={Gtk.Align.START}
-            orientation={Gtk.Orientation.VERTICAL}
+            maximum_size={width}
             marginStart={margin}
             marginBottom={margin}
             marginTop={margin}
          >
             <Launcher />
-         </box>
+         </Adw.Clamp>
       </window>
    );
-};
+}

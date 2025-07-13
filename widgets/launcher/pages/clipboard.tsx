@@ -1,6 +1,6 @@
 import app from "ags/gtk4/app";
 import { Gtk } from "ags/gtk4";
-import { bash } from "../../../utils/utils";
+import { bash, dependencies } from "../../../utils/utils";
 import { icons } from "../../../utils/icons";
 import { ClipImage } from "../items/clip_image";
 import { ClipText } from "../items/clip_text";
@@ -8,8 +8,6 @@ import { ClipColor } from "../items/clip_color";
 import { createState, For, onCleanup } from "ags";
 import options from "@/options";
 const { name, page } = options.launcher;
-
-let windowToggleHandler: number | null = null;
 
 const colorPatterns = {
    hex: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
@@ -33,9 +31,11 @@ const list = text((text) => {
    });
 });
 
-const loadInitialList = async () => {
+async function loadInitialList() {
+   if (!dependencies("cliphist")) return;
+
    try {
-      cachedList_set([]);
+      cachedList_set(null);
       const list = await bash("cliphist list");
       cachedList_set(list.split("\n").filter((line) => line.trim()));
       text_set("init");
@@ -43,13 +43,9 @@ const loadInitialList = async () => {
    } catch (error) {
       console.error("Failed to load clipboard history:", error);
    }
-};
+}
 
-onCleanup(() => {
-   console.log(1);
-});
-
-const ClipButton = ({ item }: { item: string }) => {
+function ClipButton({ item }: { item: string }) {
    const [id, ...contentParts] = item.split("\t");
    const content = contentParts.join(" ").trim();
    const isImage = content.match(imagePattern);
@@ -60,37 +56,35 @@ const ClipButton = ({ item }: { item: string }) => {
    return isColor ? (
       <ClipColor id={id} content={content} />
    ) : isImage ? (
-      <ClipImage id={id} content={isImage} />
+      <ClipText id={id} content={content} />
    ) : (
       <ClipText id={id} content={content} />
    );
-};
+}
 
 function Entry() {
+   let appconnect: number;
+
    onCleanup(() => {
-      if (windowToggleHandler) {
-         app.disconnect(windowToggleHandler);
-      }
+      if (appconnect) app.disconnect(appconnect);
    });
+
    return (
       <entry
          hexpand
          $={(self) => {
-            windowToggleHandler = app.connect(
-               "window-toggled",
-               async (_, win) => {
-                  const winName = win.name;
-                  const visible = win.visible;
-                  const mode = page.get() == "clipboard";
+            appconnect = app.connect("window-toggled", async (_, win) => {
+               const winName = win.name;
+               const visible = win.visible;
+               const mode = page.get() == "clipboard";
 
-                  if (winName == name && visible && mode) {
-                     scrolled.set_vadjustment(null);
-                     await loadInitialList();
-                     self.set_text("");
-                     self.grab_focus();
-                  }
-               },
-            );
+               if (winName == name && visible && mode) {
+                  scrolled.set_vadjustment(null);
+                  await loadInitialList();
+                  self.set_text("");
+                  self.grab_focus();
+               }
+            });
          }}
          placeholderText={"Search..."}
          onNotifyText={(self) => text_set(self.text)}
@@ -98,56 +92,63 @@ function Entry() {
    );
 }
 
-const Clear = () => (
-   <button
-      class={"clear"}
-      onClicked={async () => {
-         bash("cliphist wipe");
-         await loadInitialList();
-      }}
-   >
-      <image iconName={icons.ui.trash} pixelSize={20} />
-   </button>
-);
+function Clear() {
+   return (
+      <button
+         class={"clear"}
+         focusOnClick={false}
+         onClicked={async () => {
+            bash("cliphist wipe");
+            await loadInitialList();
+         }}
+      >
+         <image iconName={icons.ui.trash} pixelSize={20} />
+      </button>
+   );
+}
 
-const Header = () => (
-   <box>
+function Header() {
+   return (
       <box class={"header"}>
          <Entry />
+         <Clear />
       </box>
-      <Clear />
-   </box>
-);
+   );
+}
 
-const ClipList = () => (
-   <scrolledwindow class={"apps-list"} $={(ref) => (scrolled = ref)}>
+function List() {
+   return (
+      <scrolledwindow class={"apps-list"} $={(self) => (scrolled = self)}>
+         <box
+            spacing={options.theme.spacing}
+            vexpand
+            orientation={Gtk.Orientation.VERTICAL}
+         >
+            <For each={list}>
+               {(item) => {
+                  return <ClipButton item={item} />;
+               }}
+            </For>
+         </box>
+      </scrolledwindow>
+   );
+}
+
+function NotFound() {
+   return (
       <box
-         spacing={options.theme.spacing}
+         halign={Gtk.Align.CENTER}
+         valign={Gtk.Align.CENTER}
          vexpand
-         orientation={Gtk.Orientation.VERTICAL}
+         class={"apps-not-found"}
+         visible={list.as((l) => l.length === 0)}
       >
-         <For each={list}>
-            {(item) => {
-               return <ClipButton item={item} />;
-            }}
-         </For>
+         <label label={"No matches found"} />
       </box>
-   </scrolledwindow>
-);
+   );
+}
 
-const NotFound = () => (
-   <box
-      halign={Gtk.Align.CENTER}
-      valign={Gtk.Align.CENTER}
-      vexpand
-      class={"apps-not-found"}
-      visible={list.as((l) => l.length === 0)}
-   >
-      <label label={"No matches found"} />
-   </box>
-);
-
-export const Clipboard = () => {
+export function Clipboard() {
    return (
       <box
          name={"clipboard"}
@@ -158,7 +159,7 @@ export const Clipboard = () => {
       >
          <Header />
          <NotFound />
-         <ClipList />
+         <List />
       </box>
    );
-};
+}

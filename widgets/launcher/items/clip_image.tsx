@@ -4,16 +4,16 @@ import { Gtk } from "ags/gtk4";
 import { timeout } from "ags/time";
 import app from "ags/gtk4/app";
 import { createState, onCleanup } from "ags";
-import { hide_all_windows } from "../../../windows";
+import { hide_all_windows } from "@/windows";
 import options from "@/options";
 
-export const ClipImage = ({
+export function ClipImage({
    id,
    content,
 }: {
    id: string;
    content: RegExpMatchArray;
-}) => {
+}) {
    const [_, size, unit, format, width, height] = content;
    const maxWidth = 460;
    const widthPx = (Number(width) / Number(height)) * 100;
@@ -23,7 +23,7 @@ export const ClipImage = ({
    let picturebox: Gtk.Picture;
    let appconnect: number;
 
-   const loadImage = async () => {
+   async function loadImage() {
       try {
          await bash(`mkdir -p "/tmp/ags/cliphist/"`);
          await bash(`cliphist decode ${id} > ${imagePath}`);
@@ -31,10 +31,10 @@ export const ClipImage = ({
          timeout(1000, () => {
             bash(`rm -f ${imagePath}`).catch(print);
          });
-      } catch (err) {
-         print(`Failed to load image preview: ${err}`);
+      } catch (error) {
+         console.error(`Failed to load image preview: ${error}`);
       }
-   };
+   }
 
    loadImage();
    onCleanup(() => {
@@ -70,4 +70,4 @@ export const ClipImage = ({
          </button>
       </box>
    );
-};
+}

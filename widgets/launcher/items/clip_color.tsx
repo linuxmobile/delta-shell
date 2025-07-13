@@ -1,9 +1,9 @@
 import Pango from "gi://Pango?version=1.0";
 import { bash } from "../../../utils/utils";
 import { Gdk, Gtk } from "ags/gtk4";
-import { hide_all_windows } from "../../../windows";
+import { hide_all_windows } from "@/windows";
 
-export const ClipColor = ({ id, content }: { id: string; content: string }) => {
+export function ClipColor({ id, content }: { id: string; content: string }) {
    const gdkColor = new Gdk.RGBA();
    const isValid = gdkColor.parse(content);
 
@@ -37,4 +37,4 @@ export const ClipColor = ({ id, content }: { id: string; content: string }) => {
          </box>
       </button>
    );
-};
+}
