@@ -45,7 +45,7 @@ export const Tray = () => {
          >
             <image
                iconName={tray_visible((v) =>
-                  v ? icons.ui.arrow.right : icons.ui.arrow.left,
+                  v ? icons.arrow.right : icons.arrow.left,
                )}
                pixelSize={20}
             />

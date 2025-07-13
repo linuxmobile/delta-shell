@@ -102,7 +102,7 @@ function Clear() {
             await loadInitialList();
          }}
       >
-         <image iconName={icons.ui.trash} pixelSize={20} />
+         <image iconName={icons.trash} pixelSize={20} />
       </button>
    );
 }

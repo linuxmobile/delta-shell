@@ -69,7 +69,7 @@ export function QSButton(props: QSButtonProps) {
                cssClasses={ArrowClasses}
                focusOnClick={false}
             >
-               <image iconName={icons.ui.arrow.right} pixelSize={24} />
+               <image iconName={icons.arrow.right} pixelSize={24} />
             </button>
          )}
       </box>

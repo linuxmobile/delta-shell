@@ -16,11 +16,7 @@ function ScanningIndicator() {
    });
 
    return (
-      <image
-         iconName={icons.ui.refresh}
-         pixelSize={20}
-         cssClasses={className}
-      />
+      <image iconName={icons.refresh} pixelSize={20} cssClasses={className} />
    );
 }
 
@@ -32,7 +28,7 @@ function Header() {
             focusOnClick={false}
             onClicked={() => options.control.page.set("main")}
          >
-            <image iconName={icons.ui.arrow.left} pixelSize={20} />
+            <image iconName={icons.arrow.left} pixelSize={20} />
          </button>
          <label
             label={"Wi-Fi"}
@@ -73,7 +69,7 @@ function Item({ accessPoint }: ItemProps) {
             <label label={accessPoint.ssid} />
             <box hexpand />
             <image
-               iconName={icons.ui.check}
+               iconName={icons.check}
                pixelSize={20}
                visible={isConnected}
             />

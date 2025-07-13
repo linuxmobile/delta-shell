@@ -17,7 +17,7 @@ function Clear() {
       >
          <image
             halign={Gtk.Align.CENTER}
-            iconName={icons.ui.trash}
+            iconName={icons.trash}
             pixelSize={20}
          />
       </button>

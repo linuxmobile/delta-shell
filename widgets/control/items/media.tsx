@@ -19,8 +19,8 @@ function MediaPlayer({ player }: { player: AstalMpris.Player }) {
    );
    const playIcon = createBinding(player, "playbackStatus").as((s) =>
       s === AstalMpris.PlaybackStatus.PLAYING
-         ? icons.ui.player.pause
-         : icons.ui.player.play,
+         ? icons.player.pause
+         : icons.player.play,
    );
 
    const PlayerTitle = () => (
@@ -35,7 +35,7 @@ function MediaPlayer({ player }: { player: AstalMpris.Player }) {
    );
 
    const PlayerIcon = () => (
-      <image iconName={icons.ui.player.icon} pixelSize={22} />
+      <image iconName={icons.player.icon} pixelSize={22} />
    );
 
    const PlayerArtist = () => (
@@ -53,9 +53,9 @@ function MediaPlayer({ player }: { player: AstalMpris.Player }) {
          onClicked={() => player.previous()}
          focusOnClick={false}
          visible={createBinding(player, "canGoPrevious")}
-         iconName={icons.ui.player.prev}
+         iconName={icons.player.prev}
       >
-         <image iconName={icons.ui.player.prev} pixelSize={22} />
+         <image iconName={icons.player.prev} pixelSize={22} />
       </button>
    );
 
@@ -75,7 +75,7 @@ function MediaPlayer({ player }: { player: AstalMpris.Player }) {
          focusOnClick={false}
          visible={createBinding(player, "canGoNext")}
       >
-         <image iconName={icons.ui.player.next} pixelSize={22} />
+         <image iconName={icons.player.next} pixelSize={22} />
       </button>
    );
 

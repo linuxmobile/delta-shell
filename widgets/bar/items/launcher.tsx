@@ -41,7 +41,7 @@ export function Launcher() {
             }}
             button={0}
          />
-         <image iconName={icons.ui.search} pixelSize={20} />
+         <image iconName={icons.search} pixelSize={20} />
       </box>
    );
 }

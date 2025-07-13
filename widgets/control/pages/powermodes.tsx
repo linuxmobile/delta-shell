@@ -13,7 +13,7 @@ function Header() {
             focusOnClick={false}
             onClicked={() => options.control.page.set("main")}
          >
-            <image iconName={icons.ui.arrow.left} pixelSize={20} />
+            <image iconName={icons.arrow.left} pixelSize={20} />
          </button>
          <label
             label={"Power Modes"}
@@ -51,7 +51,7 @@ function Item({ profile }: { profile: string }) {
             <label label={profiles_names[profile]} />
             <box hexpand />
             <image
-               iconName={icons.ui.check}
+               iconName={icons.check}
                pixelSize={20}
                visible={isConnected}
             />

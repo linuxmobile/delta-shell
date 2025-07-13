@@ -129,14 +129,14 @@ function Calendar() {
             class={"monthshift"}
             onClicked={() => shiftCalendarXMonths(-1)}
          >
-            <image iconName={icons.ui.arrow.left} pixelSize={20} />
+            <image iconName={icons.arrow.left} pixelSize={20} />
          </button>
          <button
             focusOnClick={false}
             class={"monthshift"}
             onClicked={() => shiftCalendarXMonths(1)}
          >
-            <image iconName={icons.ui.arrow.right} pixelSize={20} />
+            <image iconName={icons.arrow.right} pixelSize={20} />
          </button>
       </box>
    );
