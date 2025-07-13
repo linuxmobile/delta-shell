@@ -8,16 +8,11 @@ import { createBinding, createComputed } from "ags";
 import options from "@/options";
 import { resetCss } from "@/services/styles";
 import { QSButton } from "@/widgets/common/qsbutton";
+import { profiles_names } from "../pages/powermodes";
 
 function PowerProfilesButton() {
    const powerprofile = AstalPowerProfiles.get_default();
    const activeprofile = createBinding(powerprofile, "activeProfile");
-
-   const profiles_names = {
-      "power-saver": "Power Saver",
-      balanced: "Balanced",
-      performance: "Performance",
-   };
 
    return (
       <QSButton

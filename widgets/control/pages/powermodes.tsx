@@ -25,11 +25,11 @@ function Header() {
    );
 }
 
-const profiles_names = {
+export const profiles_names = {
    "power-saver": "Power Saver",
    balanced: "Balanced",
    performance: "Performance",
-};
+} as Record<string, any>;
 
 function Item({ profile }: { profile: string }) {
    const isConnected = createBinding(power, "activeProfile").as(

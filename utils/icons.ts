@@ -29,7 +29,7 @@ export const icons = {
       "power-saver": "speedometer-1-symbolic",
       balanced: "speedometer-2-symbolic",
       performance: "speedometer-3-symbolic",
-   },
+   } as Record<string, any>,
    network: {
       wifi: {
          disabled: "wifi-off-symbolic",
@@ -49,7 +49,7 @@ export const icons = {
       reboot: "refresh-cw-symbolic",
       logout: "log-out-symbolic",
       shutdown: "power-symbolic",
-   },
+   } as Record<string, any>,
    screenshot: {
       area: "maximize-symbolic",
       all: "table-symbolic",

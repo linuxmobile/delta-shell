@@ -63,7 +63,7 @@ const options = mkOptions(configFile, {
    },
    control: {
       name: "control",
-      page: opt<"main" | "network" | "bluetooth" | "powermode">("main"),
+      page: opt<"main" | "network" | "bluetooth" | "powermodes">("main"),
       default_coverArt: `${SRC}/assets/defsong.jpg`,
       width: opt(500),
       margin: opt(10),
