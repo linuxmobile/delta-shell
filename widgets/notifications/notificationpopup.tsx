@@ -1,18 +1,15 @@
 import AstalNotifd from "gi://AstalNotifd";
 import { Notification } from "./notification";
 import Astal from "gi://Astal";
-import { Gtk } from "ags/gtk4";
+import { Gdk, Gtk } from "ags/gtk4";
 import { createBinding, createState, For, onCleanup } from "ags";
 import app from "ags/gtk4/app";
 import GLib from "gi://GLib";
 import options from "@/options";
-
+const notifd = AstalNotifd.get_default();
 const { name, margin, timeout } = options.notifications_popup;
 
-export function NotificationPopup() {
-   const monitors = createBinding(app, "monitors");
-   const notifd = AstalNotifd.get_default();
-
+export function NotificationPopup(gdkmonitor: Gdk.Monitor) {
    const [notifications, notifications_set] = createState(
       new Array<AstalNotifd.Notification>(),
    );
@@ -47,27 +44,23 @@ export function NotificationPopup() {
    });
 
    return (
-      <For each={monitors} cleanup={(win) => (win as Gtk.Window).destroy()}>
-         {(monitor) => (
-            <window
-               class={name}
-               gdkmonitor={monitor}
-               name={name}
-               visible={notifications((ns) => ns.length > 0)}
-               anchor={Astal.WindowAnchor.TOP}
-            >
-               <box
-                  orientation={Gtk.Orientation.VERTICAL}
-                  spacing={options.theme.spacing}
-                  marginTop={margin}
-                  marginBottom={margin}
-               >
-                  <For each={notifications}>
-                     {(n) => <Notification n={n} showActions={true} />}
-                  </For>
-               </box>
-            </window>
-         )}
-      </For>
+      <window
+         class={name}
+         gdkmonitor={gdkmonitor}
+         name={name}
+         visible={notifications((ns) => ns.length > 0)}
+         anchor={Astal.WindowAnchor.TOP}
+      >
+         <box
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={options.theme.spacing}
+            marginTop={margin}
+            marginBottom={margin}
+         >
+            <For each={notifications}>
+               {(n) => <Notification n={n} showActions={true} />}
+            </For>
+         </box>
+      </window>
    );
 }

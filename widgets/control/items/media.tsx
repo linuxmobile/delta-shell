@@ -80,7 +80,7 @@ function MediaPlayer({ player }: { player: AstalMpris.Player }) {
    );
 
    const Buttons = () => (
-      <box spacing={options.theme.spacing} valign={Gtk.Align.END}>
+      <box spacing={options.theme.spacing} vexpand valign={Gtk.Align.END}>
          <ButtonPrev />
          <ButtonPlay />
          <ButtonNext />
