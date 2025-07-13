@@ -3,16 +3,15 @@ import Gdk from "gi://Gdk";
 import Gtk from "gi://Gtk";
 import app from "ags/gtk4/app";
 import Graphene from "gi://Graphene?version=1.0";
-const { name, page, width, margin } = options.control;
-
 import { NetworkPage } from "./pages/network";
 import { MainPage } from "./pages/main";
 import { BluetoothPage } from "./pages/bluetooth";
 import { PowerModesPage } from "./pages/powermodes";
 import { onCleanup } from "ags";
 import { hide_all_windows } from "@/windows";
-import PopupWindow from "../common/popupwindow";
 import options from "@/options";
+import Adw from "gi://Adw?version=1";
+const { name, page, width, margin } = options.control;
 
 function Control() {
    return (
@@ -34,7 +33,7 @@ function Control() {
 export default function (gdkmonitor: Gdk.Monitor) {
    const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor;
    let win: Astal.Window;
-   let contentbox: Gtk.Box;
+   let contentbox: Adw.Clamp;
 
    function onKey(
       _e: Gtk.EventControllerKey,
@@ -79,16 +78,17 @@ export default function (gdkmonitor: Gdk.Monitor) {
       >
          <Gtk.EventControllerKey onKeyPressed={onKey} />
          <Gtk.GestureClick onPressed={onClick} />
-         <box
+         <Adw.Clamp
             $={(self) => (contentbox = self)}
             halign={Gtk.Align.END}
             focusable
+            maximum_size={width}
             margin_end={margin}
             marginBottom={margin}
             marginTop={margin}
          >
             <Control />
-         </box>
+         </Adw.Clamp>
       </window>
    );
 }

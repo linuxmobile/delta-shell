@@ -5,10 +5,6 @@ import GLib from "gi://GLib?version=2.0";
 
 export const cacheDir = `${GLib.get_user_cache_dir()}/epik-shell`;
 
-export const gsettings = new Gio.Settings({
-   schema: "org.gnome.desktop.interface",
-});
-
 /**
  * @returns true if all of the `bins` are found
  */

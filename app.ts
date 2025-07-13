@@ -2,6 +2,7 @@ import app from "ags/gtk4/app";
 import "@/services/styles";
 import windows from "./windows";
 import request from "./request";
+import Gio from "gi://Gio?version=2.0";
 
 app.start({
    icons: `${SRC}/assets/icons`,

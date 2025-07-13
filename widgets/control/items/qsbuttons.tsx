@@ -1,6 +1,5 @@
 import { Gtk } from "ags/gtk4";
-import { QSButton } from "../../common/qsbutton";
-import { getNetworkIconBinding, icons } from "../../../utils/icons";
+import { getNetworkIconBinding, icons } from "@/utils/icons";
 import Network from "gi://AstalNetwork?version=0.1";
 import AstalNotifd from "gi://AstalNotifd?version=0.1";
 import Bluetooth from "gi://AstalBluetooth?version=0.1";
@@ -8,6 +7,7 @@ import AstalPowerProfiles from "gi://AstalPowerProfiles?version=0.1";
 import { createBinding, createComputed } from "ags";
 import options from "@/options";
 import { resetCss } from "@/services/styles";
+import { QSButton } from "@/widgets/common/qsbutton";
 
 function PowerProfilesButton() {
    const powerprofile = AstalPowerProfiles.get_default();
@@ -60,6 +60,7 @@ function PowerProfilesButton() {
 
 function WifiButton() {
    const wifi = Network.get_default().wifi;
+   const enabled = createBinding(wifi, "enabled");
    const wifiSsid = createComputed(
       [createBinding(wifi, "state"), createBinding(wifi, "ssid")],
       (state, ssid) => {
@@ -80,12 +81,12 @@ function WifiButton() {
             options.control.page.set("network");
          }}
          showArrow={true}
-         ArrowClasses={createBinding(wifi, "enabled").as((p) => {
+         ArrowClasses={enabled.as((p) => {
             const classes = ["arrow"];
             p && classes.push("active");
             return classes;
          })}
-         ButtonClasses={createBinding(wifi, "enabled").as((p) => {
+         ButtonClasses={enabled.as((p) => {
             const classes = ["qs-button-box-arrow"];
             p && classes.push("active");
             return classes;
@@ -113,6 +114,7 @@ function DNDButton() {
 
 function BluetoothButton() {
    const bluetooth = Bluetooth.get_default();
+   const powered = createBinding(bluetooth, "isPowered");
    const deviceConnected = createComputed(
       [
          createBinding(bluetooth, "devices"),
@@ -136,12 +138,12 @@ function BluetoothButton() {
          showArrow={true}
          onClicked={() => bluetooth.toggle()}
          onArrowClicked={() => options.control.page.set("bluetooth")}
-         ArrowClasses={createBinding(bluetooth, "isPowered").as((p) => {
+         ArrowClasses={powered.as((p) => {
             const classes = ["arrow"];
             p && classes.push("active");
             return classes;
          })}
-         ButtonClasses={createBinding(bluetooth, "isPowered").as((p) => {
+         ButtonClasses={powered.as((p) => {
             const classes = ["qs-button-box-arrow"];
             p && classes.push("active");
             return classes;

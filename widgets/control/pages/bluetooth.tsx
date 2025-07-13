@@ -1,4 +1,4 @@
-import { icons } from "../../../utils/icons";
+import { icons } from "@/utils/icons";
 import { Gtk } from "ags/gtk4";
 import AstalBluetooth from "gi://AstalBluetooth?version=0.1";
 import { timeout } from "ags/time";
@@ -28,7 +28,7 @@ function ScanningIndicator() {
 
 function Header() {
    return (
-      <box class={"header"} hexpand={false} spacing={10}>
+      <box class={"header"} spacing={options.theme.spacing}>
          <button
             cssClasses={["qs-header-button", "qs-page-prev"]}
             focusOnClick={false}
@@ -38,7 +38,6 @@ function Header() {
          </button>
          <label
             label={"Bluetooth"}
-            hexpand={true}
             halign={Gtk.Align.START}
             valign={Gtk.Align.CENTER}
          />
@@ -83,7 +82,7 @@ function Item({ device }: ItemProps) {
          }}
          focusOnClick={false}
       >
-         <box spacing={10}>
+         <box spacing={options.theme.spacing}>
             <image
                iconName={
                   device.icon === null
@@ -94,10 +93,10 @@ function Item({ device }: ItemProps) {
             <label label={device.name} />
             <label
                class={"bluetooth-device-percentage"}
-               label={`${percentage.as((p) => p * 100)}%`}
+               label={percentage.as((p) => `${Math.round(p * 100)}%`)}
                visible={isConnected}
             />
-            <box hexpand={true} />
+            <box hexpand />
             <image
                iconName={icons.ui.check}
                pixelSize={20}
@@ -109,16 +108,20 @@ function Item({ device }: ItemProps) {
 }
 
 function List() {
-   const devices = createBinding(bluetooth, "devices").as((devices) =>
+   const list = createBinding(bluetooth, "devices").as((devices) =>
       devices.sort((a, b) => Number(b.connected) - Number(a.connected)),
    );
 
    return (
-      <Gtk.ScrolledWindow>
-         <box orientation={Gtk.Orientation.VERTICAL} spacing={10} vexpand>
-            <For each={devices}>{(device) => <Item device={device} />}</For>
+      <scrolledwindow>
+         <box
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={options.theme.spacing}
+            vexpand
+         >
+            <For each={list}>{(device) => <Item device={device} />}</For>
          </box>
-      </Gtk.ScrolledWindow>
+      </scrolledwindow>
    );
 }
 
@@ -129,7 +132,7 @@ export function BluetoothPage() {
          name={"bluetooth"}
          cssClasses={["qs-menu-page", "bluetooth-page"]}
          orientation={Gtk.Orientation.VERTICAL}
-         spacing={10}
+         spacing={options.theme.spacing}
       >
          <Header />
          <List />

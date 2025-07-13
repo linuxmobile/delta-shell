@@ -4,9 +4,9 @@ import { Gtk } from "ags/gtk4";
 import AstalWp from "gi://AstalWp?version=0.1";
 import Brightness from "@/services/brightness";
 import options from "@/options";
+const brightness = Brightness.get_default();
 
-const BrightnessBox = () => {
-   const brightness = Brightness.get_default();
+function BrightnessBox() {
    const level = createBinding(brightness, "screen");
 
    return (
@@ -34,9 +34,9 @@ const BrightnessBox = () => {
          />
       </overlay>
    );
-};
+}
 
-const VolumeBox = () => {
+function VolumeBox() {
    const speaker = AstalWp.get_default()?.audio!.defaultSpeaker!;
    const level = createBinding(speaker, "volume");
 
@@ -61,15 +61,17 @@ const VolumeBox = () => {
          />
       </overlay>
    );
-};
+}
 
-export const Sliders = () => (
-   <box
-      spacing={options.theme.spacing}
-      orientation={Gtk.Orientation.VERTICAL}
-      class={"sliders"}
-   >
-      <VolumeBox />
-      <BrightnessBox />
-   </box>
-);
+export function Sliders() {
+   return (
+      <box
+         spacing={options.theme.spacing}
+         orientation={Gtk.Orientation.VERTICAL}
+         class={"sliders"}
+      >
+         <VolumeBox />
+         <BrightnessBox />
+      </box>
+   );
+}

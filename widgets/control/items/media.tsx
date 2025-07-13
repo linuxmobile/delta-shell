@@ -7,6 +7,7 @@ import { createBinding, For } from "ags";
 import Adw from "gi://Adw?version=1";
 import options from "@/options";
 const mpris = AstalMpris.get_default();
+let carousel: Adw.Carousel;
 
 function MediaPlayer({ player }: { player: AstalMpris.Player }) {
    const title = createBinding(player, "title").as((t) => t || "Unknown Track");
@@ -79,7 +80,7 @@ function MediaPlayer({ player }: { player: AstalMpris.Player }) {
    );
 
    const Buttons = () => (
-      <box spacing={10} valign={Gtk.Align.END} vexpand>
+      <box spacing={options.theme.spacing} valign={Gtk.Align.END}>
          <ButtonPrev />
          <ButtonPlay />
          <ButtonNext />
@@ -91,7 +92,7 @@ function MediaPlayer({ player }: { player: AstalMpris.Player }) {
          $type="overlay"
          orientation={Gtk.Orientation.VERTICAL}
          class={"mediaplayer"}
-         spacing={10}
+         spacing={options.theme.spacing}
       >
          <box class={"title"}>
             <PlayerTitle />
@@ -116,10 +117,35 @@ function MediaPlayer({ player }: { player: AstalMpris.Player }) {
    );
 
    return (
-      <overlay heightRequest={130} hexpand class={"mediaplayer-lower"}>
+      <overlay hexpand class={"mediaplayer-lower"}>
          <PlayerArt />
          <Content />
       </overlay>
+   );
+}
+
+function CustomIndicator({ carousel }: { carousel: Adw.Carousel }) {
+   const position = createBinding(carousel, "position");
+   const nPages = createBinding(carousel, "n_pages");
+
+   return (
+      <box
+         class="indicator"
+         spacing={options.theme.spacing}
+         visible={nPages.as((p) => p > 1)}
+         halign={Gtk.Align.START}
+         valign={Gtk.Align.END}
+      >
+         <For each={nPages.as((n) => Array.from({ length: n }, (_, i) => i))}>
+            {(index) => (
+               <box
+                  class={position.as((pos) =>
+                     pos === index ? "active-dot" : "inactive-dot",
+                  )}
+               />
+            )}
+         </For>
+      </box>
    );
 }
 
@@ -127,16 +153,20 @@ export function MprisPlayers() {
    const list = createBinding(mpris, "players");
 
    return (
-      <box
-         spacing={10}
-         orientation={Gtk.Orientation.VERTICAL}
+      <overlay
+         heightRequest={130}
          visible={list.as((players) => players.length !== 0)}
       >
-         <Adw.Carousel spacing={options.theme.spacing}>
+         <Adw.Carousel
+            spacing={options.theme.spacing}
+            $={(self) => (carousel = self)}
+            $type={"overlay"}
+         >
             <For each={list}>
                {(player: AstalMpris.Player) => <MediaPlayer player={player} />}
             </For>
          </Adw.Carousel>
-      </box>
+         <CustomIndicator carousel={carousel} $type={"overlay"} />
+      </overlay>
    );
 }

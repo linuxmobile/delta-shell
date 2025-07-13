@@ -1,10 +1,9 @@
 import AstalNetwork from "gi://AstalNetwork";
-import { bash } from "../../../utils/utils";
-import { icons, getAccessPointIcon } from "../../../utils/icons";
+import { bash } from "@/utils/utils";
+import { icons, getAccessPointIcon } from "@/utils/icons";
 import { Gtk } from "ags/gtk4";
 import { createBinding, For } from "ags";
 import options from "@/options";
-
 const wifi = AstalNetwork.get_default().wifi;
 
 function ScanningIndicator() {
@@ -27,7 +26,7 @@ function ScanningIndicator() {
 
 function Header() {
    return (
-      <box class={"header"} hexpand={false} spacing={10}>
+      <box class={"header"} spacing={options.theme.spacing}>
          <button
             cssClasses={["qs-header-button", "qs-page-prev"]}
             focusOnClick={false}
@@ -37,7 +36,6 @@ function Header() {
          </button>
          <label
             label={"Wi-Fi"}
-            hexpand={true}
             halign={Gtk.Align.START}
             valign={Gtk.Align.CENTER}
          />
@@ -70,10 +68,10 @@ function Item({ accessPoint }: ItemProps) {
          }
          focusOnClick={false}
       >
-         <box spacing={10}>
+         <box spacing={options.theme.spacing}>
             <image iconName={getAccessPointIcon(accessPoint)} pixelSize={20} />
             <label label={accessPoint.ssid} />
-            <box hexpand={true} />
+            <box hexpand />
             <image
                iconName={icons.ui.check}
                pixelSize={20}
@@ -85,16 +83,20 @@ function Item({ accessPoint }: ItemProps) {
 }
 
 function List() {
-   const accessPoints = createBinding(wifi, "accessPoints").as((aps) =>
+   const list = createBinding(wifi, "accessPoints").as((aps) =>
       aps.filter((ap) => !!ap.ssid).sort((a, b) => b.strength - a.strength),
    );
 
    return (
-      <Gtk.ScrolledWindow>
-         <box orientation={Gtk.Orientation.VERTICAL} spacing={10} vexpand>
-            <For each={accessPoints}>{(ap) => <Item accessPoint={ap} />}</For>
+      <scrolledwindow>
+         <box
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={options.theme.spacing}
+            vexpand
+         >
+            <For each={list}>{(ap) => <Item accessPoint={ap} />}</For>
          </box>
-      </Gtk.ScrolledWindow>
+      </scrolledwindow>
    );
 }
 
@@ -105,7 +107,7 @@ export function NetworkPage() {
          name={"network"}
          cssClasses={["qs-menu-page", "wifi-page"]}
          orientation={Gtk.Orientation.VERTICAL}
-         spacing={10}
+         spacing={options.theme.spacing}
       >
          <Header />
          <List />

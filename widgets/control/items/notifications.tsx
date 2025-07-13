@@ -1,8 +1,9 @@
 import { Gtk } from "ags/gtk4";
 import AstalNotifd from "gi://AstalNotifd?version=0.1";
-import { Notification } from "../../notifications/notification";
-import { icons } from "../../../utils/icons";
+import { Notification } from "@/widgets/notifications/notification";
+import { icons } from "@/utils/icons";
 import { createBinding, For } from "ags";
+import options from "@/options";
 const notifd = AstalNotifd.get_default();
 
 function Clear() {
@@ -49,17 +50,18 @@ function NotFound() {
    );
 }
 
-const list = createBinding(notifd, "notifications").as((notifs) =>
-   notifs.sort((a, b) => b.time - a.time),
-);
+function List() {
+   const list = createBinding(notifd, "notifications").as((notifs) =>
+      notifs.sort((a, b) => b.time - a.time),
+   );
 
-function Notifications() {
    return (
-      <scrolledwindow vexpand>
+      <scrolledwindow>
          <box
             class={"notifs-list"}
             orientation={Gtk.Orientation.VERTICAL}
-            spacing={10}
+            spacing={options.theme.spacing}
+            vexpand
          >
             <For each={list}>
                {(notif) => <Notification n={notif} showActions={true} />}
@@ -71,10 +73,13 @@ function Notifications() {
 
 export function NotificationsList() {
    return (
-      <box spacing={10} hexpand={false} orientation={Gtk.Orientation.VERTICAL}>
+      <box
+         spacing={options.theme.spacing}
+         orientation={Gtk.Orientation.VERTICAL}
+      >
          <Header />
          <NotFound />
-         <Notifications />
+         <List />
       </box>
    );
 }

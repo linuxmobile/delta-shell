@@ -1,5 +1,4 @@
-import { control_page_set } from "../../vars";
-import { icons } from "../../../utils/icons";
+import { icons } from "@/utils/icons";
 import { Gtk } from "ags/gtk4";
 import AstalPowerProfiles from "gi://AstalPowerProfiles?version=0.1";
 import { createBinding } from "ags";
@@ -8,7 +7,7 @@ const power = AstalPowerProfiles.get_default();
 
 function Header() {
    return (
-      <box class={"header"} hexpand={false} spacing={10}>
+      <box class={"header"} spacing={options.theme.spacing}>
          <button
             cssClasses={["qs-header-button", "qs-page-prev"]}
             focusOnClick={false}
@@ -18,7 +17,6 @@ function Header() {
          </button>
          <label
             label={"Power Modes"}
-            hexpand={true}
             halign={Gtk.Align.START}
             valign={Gtk.Align.CENTER}
          />
@@ -38,9 +36,9 @@ function Item({ profile }: { profile: string }) {
       (p) => p === profile,
    );
 
-   const setProfile = (profile: string) => {
+   function setProfile(profile: string) {
       power.set_active_profile(profile);
-   };
+   }
 
    return (
       <button
@@ -48,10 +46,10 @@ function Item({ profile }: { profile: string }) {
          onClicked={() => setProfile(profile)}
          focusOnClick={false}
       >
-         <box spacing={10}>
-            <image iconName={icons.powerprofiles[profile]} pixelSize={25} />
+         <box spacing={options.theme.spacing}>
+            <image iconName={icons.powerprofiles[profile]} pixelSize={24} />
             <label label={profiles_names[profile]} />
-            <box hexpand={true} />
+            <box hexpand />
             <image
                iconName={icons.ui.check}
                pixelSize={20}
@@ -63,14 +61,20 @@ function Item({ profile }: { profile: string }) {
 }
 
 function List() {
+   const list = power.get_profiles();
+
    return (
-      <Gtk.ScrolledWindow>
-         <box orientation={Gtk.Orientation.VERTICAL} spacing={10} vexpand>
-            {power.get_profiles().map(({ profile }) => (
+      <scrolledwindow>
+         <box
+            orientation={Gtk.Orientation.VERTICAL}
+            spacing={options.theme.spacing}
+            vexpand
+         >
+            {list.map(({ profile }) => (
                <Item profile={profile} />
             ))}
          </box>
-      </Gtk.ScrolledWindow>
+      </scrolledwindow>
    );
 }
 
@@ -81,7 +85,7 @@ export function PowerModesPage() {
          name={"powermodes"}
          cssClasses={["qs-menu-page", "bluetooth-page"]}
          orientation={Gtk.Orientation.VERTICAL}
-         spacing={10}
+         spacing={options.theme.spacing}
       >
          <Header />
          <List />
