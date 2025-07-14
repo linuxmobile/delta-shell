@@ -2,15 +2,15 @@ window#calendar {
    all: unset;
    color: $fg0;
 
-   .calendar-main {
+   .main {
       background: $bg0;
       padding: $widget-main-padding;
       border-radius: $widget-main-radius;
-      border: 1px solid $border-color;
+      border: $border-width solid $border-color;
    }
 
    .calendar-button,
-   .weekdays button {
+   .weekdays {
       background: transparent;
       font-weight: normal;
       outline: none;
@@ -29,7 +29,8 @@ window#calendar {
          outline: $outline-width solid $outline-color;
       }
    }
-   .calendar-button-weekend {
+
+   .weekend {
       color: $red1;
    }
 
@@ -58,7 +59,7 @@ window#calendar {
       padding: 0 10px;
    }
 
-   .calendar-button-today {
+   .today {
       background: $accent1;
       color: $bg0;
 
@@ -67,75 +68,7 @@ window#calendar {
       }
    }
 
-   .calendar-button-other-month {
+   .other-month {
       color: $fg2;
-   }
-
-   header {
-      border: none;
-      background: $bg1;
-
-      button {
-         border-radius: $widget-radius;
-         background: transparent;
-         font-weight: normal;
-         outline: none;
-         padding: 0;
-         min-height: 45px;
-         min-width: 45px;
-
-         &:hover {
-            background-color: $bg2;
-            background-image: unset;
-         }
-      }
-   }
-
-   grid {
-      .day-number {
-         background: transparent;
-         font-weight: normal;
-         outline: none;
-         border-radius: $widget-radius;
-         padding: 0;
-         min-width: 40px;
-         min-height: 45px;
-
-         &:hover {
-            transition: $transition-background;
-            background: $bg1;
-         }
-
-         &:focus {
-            transition: 0s;
-            outline-offset: -$outline-width;
-            outline: $outline-width solid $outline-color;
-         }
-
-         &.other-month {
-            color: $fg2;
-         }
-
-         &.today {
-            background: $accent1;
-            color: $bg0;
-            border: none;
-         }
-      }
-
-      .day-name {
-         background: transparent;
-         font-weight: normal;
-         outline: none;
-         border-radius: $widget-radius;
-         padding: 0;
-         min-width: 40px;
-         min-height: 45px;
-
-         &:hover {
-            transition: $transition-background;
-            background: $bg1;
-         }
-      }
    }
 }

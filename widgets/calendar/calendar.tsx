@@ -18,19 +18,14 @@ let calendarJson = getCalendarLayout(undefined, true);
 let monthshift = 0;
 
 function getDateInXMonthsTime(x: number) {
-   const currentDate = new Date(); // Get the current date
-   let targetMonth = currentDate.getMonth() + x; // Calculate the target month
-   let targetYear = currentDate.getFullYear(); // Get the current year
+   const currentDate = new Date();
+   let targetMonth = currentDate.getMonth() + x;
+   let targetYear = currentDate.getFullYear();
 
-   // Adjust the year and month if necessary
    targetYear += Math.floor(targetMonth / 12);
    targetMonth = ((targetMonth % 12) + 12) % 12;
 
-   // Create a new date object with the target year and month
    let targetDate = new Date(targetYear, targetMonth, 1);
-
-   // Set the day to the last day of the month to get the desired date
-   // targetDate.setDate(0);
 
    return targetDate;
 }
@@ -50,9 +45,13 @@ function CalendarDay({ day, today, weekend }: Day) {
       <button
          cssClasses={[
             `calendar-button`,
-            today == 1 ? "calendar-button-today" : "",
-            today == -1 ? "calendar-button-other-month" : "",
-            weekend == 1 ? "calendar-button-weekend" : "",
+            today == 1
+               ? "today"
+               : today == -1
+                 ? "other-month"
+                 : weekend == 1
+                   ? "weekend"
+                   : "",
          ]}
          focusOnClick={false}
       >
@@ -66,7 +65,7 @@ function CalendarDay({ day, today, weekend }: Day) {
 function Calendar() {
    let calendarbox: Gtk.Box;
 
-   const addCalendarChildren = (box: Gtk.Box, calendarJson: Day[][]) => {
+   function addCalendarChildren(box: Gtk.Box, calendarJson: Day[][]) {
       while (box.observe_children().get_n_items() > 0) {
          const child = box.observe_children().get_item(0) as Gtk.Widget;
          if (child) {
@@ -85,9 +84,9 @@ function Calendar() {
          );
          box.append(rowBox);
       });
-   };
+   }
 
-   const shiftCalendarXMonths = (x: number) => {
+   function shiftCalendarXMonths(x: number) {
       const newShift = x === 0 ? 0 : monthshift + x;
       if (newShift === monthshift) return;
 
@@ -103,59 +102,65 @@ function Calendar() {
       );
 
       addCalendarChildren(calendarbox, calendarJson);
-   };
+   }
 
    const [calendarMonthYearLabel, calendarMonthYearLabel_set] =
       createState<string>("");
 
-   const MonthYear = () => (
-      <button
-         class={"monthyear"}
-         onClicked={() => shiftCalendarXMonths(0)}
-         focusOnClick={false}
-         label={calendarMonthYearLabel((m) => m)}
-         $={(self) => {
-            self.label = `${new Date().toLocaleString("default", { month: "long" })} ${new Date().getFullYear()}`;
-         }}
-      />
-   );
-
-   const Header = () => (
-      <box class={"header"} spacing={options.theme.spacing}>
-         <MonthYear />
-         <box hexpand />
+   function MonthYear() {
+      return (
          <button
+            class={"monthyear"}
+            onClicked={() => shiftCalendarXMonths(0)}
             focusOnClick={false}
-            class={"monthshift"}
-            onClicked={() => shiftCalendarXMonths(-1)}
-         >
-            <image iconName={icons.arrow.left} pixelSize={20} />
-         </button>
-         <button
-            focusOnClick={false}
-            class={"monthshift"}
-            onClicked={() => shiftCalendarXMonths(1)}
-         >
-            <image iconName={icons.arrow.right} pixelSize={20} />
-         </button>
-      </box>
-   );
+            label={calendarMonthYearLabel((m) => m)}
+            $={(self) => {
+               self.label = `${new Date().toLocaleString("default", { month: "long" })} ${new Date().getFullYear()}`;
+            }}
+         />
+      );
+   }
 
-   const CalendarDays = () => (
-      <box
-         spacing={options.theme.spacing}
-         class={"days"}
-         orientation={Gtk.Orientation.VERTICAL}
-         $={(self) => {
-            calendarbox = self;
-            addCalendarChildren(self, calendarJson);
-         }}
-      />
-   );
+   function Header() {
+      return (
+         <box class={"header"} spacing={options.theme.spacing}>
+            <MonthYear />
+            <box hexpand />
+            <button
+               focusOnClick={false}
+               class={"monthshift"}
+               onClicked={() => shiftCalendarXMonths(-1)}
+            >
+               <image iconName={icons.arrow.left} pixelSize={20} />
+            </button>
+            <button
+               focusOnClick={false}
+               class={"monthshift"}
+               onClicked={() => shiftCalendarXMonths(1)}
+            >
+               <image iconName={icons.arrow.right} pixelSize={20} />
+            </button>
+         </box>
+      );
+   }
+
+   function CalendarDays() {
+      return (
+         <box
+            spacing={options.theme.spacing}
+            class={"days"}
+            orientation={Gtk.Orientation.VERTICAL}
+            $={(self) => {
+               calendarbox = self;
+               addCalendarChildren(self, calendarJson);
+            }}
+         />
+      );
+   }
 
    return (
       <box
-         class={"calendar-main"}
+         class={"main"}
          $={(self) => {
             self.connect("map", () => {
                shiftCalendarXMonths(0);
@@ -179,7 +184,7 @@ function Calendar() {
    );
 }
 
-export default (gdkmonitor: Gdk.Monitor) => {
+export default function (gdkmonitor: Gdk.Monitor) {
    const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor;
    let win: Astal.Window;
    let contentbox: Gtk.Box;
@@ -238,4 +243,4 @@ export default (gdkmonitor: Gdk.Monitor) => {
          </box>
       </window>
    );
-};
+}
