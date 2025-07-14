@@ -88,6 +88,7 @@ export function Notification(props: {
                   class={"body"}
                   maxWidthChars={30}
                   wrap={true}
+                  halign={Gtk.Align.START}
                   useMarkup={true}
                   wrapMode={Pango.WrapMode.CHAR}
                   justify={Gtk.Justification.FILL}
