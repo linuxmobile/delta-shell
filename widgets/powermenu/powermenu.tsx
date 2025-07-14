@@ -34,19 +34,21 @@ function MenuButton({ icon, label, clicked }: MenuButtonProps) {
 
 const list = ["Sleep", "Logout", "Reboot", "Shutdown"];
 
-const PowerMenu = () => (
-   <box class={"powermenu-main"} spacing={options.theme.main_padding}>
-      {list.map((value) => (
-         <MenuButton
-            icon={icons.powermenu[value.toLowerCase()]}
-            label={value}
-            clicked={() => powermenu.action(value)}
-         />
-      ))}
-   </box>
-);
+function PowerMenu() {
+   return (
+      <box class={"main"} spacing={options.theme.main_padding}>
+         {list.map((value) => (
+            <MenuButton
+               icon={icons.powermenu[value.toLowerCase()]}
+               label={value}
+               clicked={() => powermenu.action(value)}
+            />
+         ))}
+      </box>
+   );
+}
 
-export default (gdkmonitor: Gdk.Monitor) => {
+export default function (gdkmonitor: Gdk.Monitor) {
    const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor;
    let win: Astal.Window;
    let contentbox: Gtk.Box;
@@ -100,4 +102,4 @@ export default (gdkmonitor: Gdk.Monitor) => {
          </box>
       </window>
    );
-};
+}

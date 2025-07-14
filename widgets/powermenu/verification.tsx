@@ -11,38 +11,31 @@ import options from "@/options";
 const { name } = options.verification;
 const powermenu = Powermenu.get_default();
 
-const Verification = () => (
-   <box
-      class={"verification-main"}
-      orientation={Gtk.Orientation.VERTICAL}
-      spacing={20}
-   >
-      <label
-         label={createBinding(powermenu, "title")}
-         class={"verification-title"}
-      />
-      <label label={"Are you sure?"} class={"verification-body"} />
-      <box homogeneous={true} spacing={options.theme.spacing}>
-         <button
-            label={"No"}
-            class={"verification-button"}
-            focusOnClick={false}
-            onClicked={() => hide_all_windows()}
-         />
-         <button
-            label={"Yes"}
-            class={"verification-button"}
-            focusOnClick={false}
-            onClicked={() => {
-               exec(powermenu.cmd);
-               hide_all_windows();
-            }}
-         />
+function Verification() {
+   return (
+      <box class={"main"} orientation={Gtk.Orientation.VERTICAL} spacing={20}>
+         <label label={createBinding(powermenu, "title")} class={"title"} />
+         <label label={"Are you sure?"} class={"label"} />
+         <box homogeneous={true} spacing={options.theme.spacing}>
+            <button
+               label={"No"}
+               focusOnClick={false}
+               onClicked={() => hide_all_windows()}
+            />
+            <button
+               label={"Yes"}
+               focusOnClick={false}
+               onClicked={() => {
+                  exec(powermenu.cmd);
+                  hide_all_windows();
+               }}
+            />
+         </box>
       </box>
-   </box>
-);
+   );
+}
 
-export default (gdkmonitor: Gdk.Monitor) => {
+export default function (gdkmonitor: Gdk.Monitor) {
    const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor;
    let win: Astal.Window;
    let contentbox: Gtk.Box;
@@ -96,4 +89,4 @@ export default (gdkmonitor: Gdk.Monitor) => {
          </box>
       </window>
    );
-};
+}

@@ -2,10 +2,10 @@ window#powermenu {
    all: unset;
    color: $fg0;
 
-   .powermenu-main {
+   .main {
       background: $bg0;
       padding: $widget-main-padding;
-      border: 1px solid $border-color;
+      border: $border-width solid $border-color;
       border-radius: $widget-main-radius;
    }
 
@@ -43,19 +43,19 @@ window#verification {
    all: unset;
    color: $fg0;
 
-   .verification-main {
+   .main {
       background: $bg0;
       padding: $widget-main-padding;
       border-radius: $widget-main-radius;
-      border: 1px solid $border-color;
+      border: $border-width solid $border-color;
    }
 
-   .verification-title,
-   .verification-body {
+   .title,
+   .label {
       font-size: 20px;
    }
 
-   .verification-button {
+   button {
       border-radius: $widget-radius;
       font-weight: normal;
       outline: none;
