@@ -56,7 +56,7 @@ function ClipButton({ item }: { item: string }) {
    return isColor ? (
       <ClipColor id={id} content={content} />
    ) : isImage ? (
-      <ClipText id={id} content={content} />
+      <ClipImage id={id} content={isImage} />
    ) : (
       <ClipText id={id} content={content} />
    );
