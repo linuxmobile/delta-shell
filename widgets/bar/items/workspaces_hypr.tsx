@@ -1,4 +1,4 @@
-import { Gtk } from "ags/gtk4";
+import { Gdk, Gtk } from "ags/gtk4";
 import { range } from "../../../utils/utils";
 import AstalHyprland from "gi://AstalHyprland?version=0.1";
 import AstalApps from "gi://AstalApps?version=0.1";
@@ -29,7 +29,18 @@ function AppButton({ app, client }: AppButtonProps) {
    );
 
    return (
-      <button onClicked={() => client.focus()} cssClasses={classes}>
+      <box cssClasses={classes}>
+         <Gtk.GestureClick
+            onPressed={(ctrl, _, x, y) => {
+               const button = ctrl.get_current_button();
+               if (button === Gdk.BUTTON_PRIMARY) {
+                  client.focus();
+               } else if (button === Gdk.BUTTON_MIDDLE) {
+                  client.kill();
+               }
+            }}
+            button={0}
+         />
          <overlay>
             <image
                $type="overlay"
@@ -48,7 +59,7 @@ function AppButton({ app, client }: AppButtonProps) {
                visible={hasWindow}
             />
          </overlay>
-      </button>
+      </box>
    );
 }
 
