@@ -4,6 +4,7 @@ import AstalHyprland from "gi://AstalHyprland?version=0.1";
 import AstalApps from "gi://AstalApps?version=0.1";
 import { createBinding, createComputed, For } from "ags";
 import options from "@/options";
+import { icons } from "@/utils/icons";
 const hyprland = AstalHyprland.get_default();
 
 type AppButtonProps = {
@@ -28,6 +29,12 @@ function AppButton({ app, client }: AppButtonProps) {
          .includes(client.class.toLowerCase()),
    );
 
+   const iconName = app
+      ? (icons.apps[app.iconName] ?? app.iconName)
+      : client.class
+        ? icons.apps[client.class]
+        : client.class;
+
    return (
       <box cssClasses={classes}>
          <Gtk.GestureClick
@@ -47,7 +54,7 @@ function AppButton({ app, client }: AppButtonProps) {
                tooltipText={client.title}
                halign={Gtk.Align.CENTER}
                valign={Gtk.Align.CENTER}
-               iconName={app ? app.iconName : client.class}
+               iconName={iconName}
                pixelSize={18}
             />
             <box

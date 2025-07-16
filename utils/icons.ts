@@ -72,6 +72,11 @@ export const icons = {
    camera: "camera-symbolic",
    video: "video-symbolic",
    settings: "settings-symbolic",
+   apps: {
+      windowkill: "windowkill",
+      "darksoulsremastered.exe": "dark-souls-remastered",
+      "onscripter-ru.exe": "umineko",
+   } as Record<string, any>,
 };
 
 export function getVolumeIcon(speaker?: AstalWp.Endpoint) {

@@ -4,6 +4,7 @@ import AstalApps from "gi://AstalApps";
 import { createBinding, createComputed, For } from "ags";
 import options, { compositor } from "@/options";
 import { bash } from "@/utils/utils";
+import { icons } from "@/utils/icons";
 const niri = AstalNiri.get_default();
 
 type AppButtonProps = {
@@ -21,6 +22,12 @@ function AppButton({ app, client }: AppButtonProps) {
       if (isFocused) classes.push("focused");
       return classes;
    });
+
+   const iconName = app
+      ? (icons.apps[app.iconName] ?? app.iconName)
+      : client.app_id
+        ? icons.apps[client.app_id]
+        : client.app_id;
 
    return (
       <box cssClasses={classes}>
@@ -41,7 +48,7 @@ function AppButton({ app, client }: AppButtonProps) {
                tooltipText={client.title}
                halign={Gtk.Align.CENTER}
                valign={Gtk.Align.CENTER}
-               iconName={app ? app.iconName : client.app_id}
+               iconName={iconName}
                pixelSize={20}
             />
             <box
