@@ -32,10 +32,10 @@ window#bar {
    .bar-item {
       background: transparent;
       font-weight: normal;
-      border-radius: $widget-radius;
       padding: 6px 0;
 
       .content {
+         border-radius: $widget-radius;
          padding: 0 10px;
       }
 
