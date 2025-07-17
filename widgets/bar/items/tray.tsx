@@ -2,6 +2,8 @@ import AstalTray from "gi://AstalTray?version=0.1";
 import { icons } from "../../../utils/icons";
 import { Gtk } from "ags/gtk4";
 import { createBinding, createState, For } from "ags";
+import BarItem from "@/widgets/common/baritem";
+import options from "@/options";
 const tray = AstalTray.get_default();
 
 export const Tray = () => {
@@ -19,17 +21,14 @@ export const Tray = () => {
    return (
       <box class={"tray"}>
          <revealer
-            revealChild={tray_visible((v) => v)}
+            revealChild={tray_visible}
             transitionType={Gtk.RevealerTransitionType.SLIDE_RIGHT}
-            transitionDuration={200}
+            transitionDuration={options.transition}
          >
-            <box>
+            <box class={"items"}>
                <For each={items}>
                   {(item) => (
-                     <menubutton
-                        $={(self) => init(self, item)}
-                        class={"bar-item"}
-                     >
+                     <menubutton $={(self) => init(self, item)}>
                         <image
                            gicon={createBinding(item, "gicon")}
                            pixelSize={20}
@@ -39,17 +38,14 @@ export const Tray = () => {
                </For>
             </box>
          </revealer>
-         <button
-            cssClasses={["bar-item", "tray-toggle"]}
-            onClicked={() => tray_visible_set((v) => !v)}
-         >
+         <BarItem onClicked={() => tray_visible_set((v) => !v)}>
             <image
                iconName={tray_visible((v) =>
                   v ? icons.arrow.right : icons.arrow.left,
                )}
                pixelSize={20}
             />
-         </button>
+         </BarItem>
       </box>
    );
 };

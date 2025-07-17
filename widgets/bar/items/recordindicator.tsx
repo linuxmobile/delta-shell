@@ -1,13 +1,13 @@
 import options from "@/options";
 import ScreenRecord from "@/services/screenrecord";
+import BarItem from "@/widgets/common/baritem";
 import { createBinding } from "ags";
 import { Gtk } from "ags/gtk4";
 const screenRecord = ScreenRecord.get_default();
 
 export function RecordIndicator() {
    return (
-      <button
-         cssClasses={["bar-item", "bar-record"]}
+      <BarItem
          visible={createBinding(screenRecord, "recording")}
          onClicked={() => screenRecord.stop().catch(() => "")}
       >
@@ -21,6 +21,6 @@ export function RecordIndicator() {
                })}
             />
          </box>
-      </button>
+      </BarItem>
    );
 }

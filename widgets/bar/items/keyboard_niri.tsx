@@ -2,6 +2,7 @@ import AstalNiri from "gi://AstalNiri";
 import { bash } from "../../../utils/utils";
 import { createState, onCleanup } from "ags";
 import { compositor } from "@/options";
+import BarItem from "@/widgets/common/baritem";
 const niri = AstalNiri.get_default();
 
 const [layout_name, layout_name_set] = createState("?");
@@ -31,8 +32,7 @@ export function Keyboard_Niri() {
    });
 
    return (
-      <button
-         cssClasses={["bar-item", "keyboard"]}
+      <BarItem
          onClicked={() => bash("niri msg action switch-layout next")}
          $={() => {
             niriconnect = niri.connect("keyboard-layout-switched", () => {
@@ -41,6 +41,6 @@ export function Keyboard_Niri() {
          }}
       >
          <label label={layout_name((s) => s)} />
-      </button>
+      </BarItem>
    );
 }

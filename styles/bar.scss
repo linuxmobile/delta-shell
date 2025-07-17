@@ -17,25 +17,45 @@ window#bar {
       border-top: $border-width solid $border-color;
    }
 
-   .bar-main {
-      padding: 6px;
+   .modules-start {
+      .first-child {
+         padding-left: 6px;
+      }
+   }
+
+   .modules-end {
+      .last-child {
+         padding-right: 6px;
+      }
    }
 
    .bar-item {
       background: transparent;
       font-weight: normal;
       border-radius: $widget-radius;
-      padding: 0 10px;
+      padding: 6px 0;
+
+      .content {
+         padding: 0 10px;
+      }
 
       &:hover {
-         background: $bg1;
-         transition: $transition-background;
+         .content {
+            background: $bg1;
+            transition: $transition-background;
+         }
       }
 
       &.active {
-         background: $bg2;
-         transition: $transition-background;
+         .content {
+            background: $bg2;
+            transition: $transition-background;
+         }
       }
+   }
+
+   .workspace {
+      padding: 0 6px;
    }
 
    @keyframes blink {
@@ -57,8 +77,6 @@ window#bar {
    }
 
    .tray {
-      background: transparent;
-
       .menu {
          &.menu > contents {
             background: $bg0;
@@ -72,45 +90,15 @@ window#bar {
          }
       }
 
-      .bar-item {
-         padding: 0;
-
+      .items {
+         padding: 6px 0;
          button {
             background: transparent;
-         }
-      }
 
-      .tray-toggle {
-         padding: 0 10px;
-      }
-   }
-
-   .workspaces {
-      background: $bg0;
-
-      .workspace-container {
-         border-radius: $widget-radius;
-         padding: 0 5px;
-         &:hover {
-            background: $bg1;
-            transition: $transition-background;
-
-            &.occupied {
+            &:hover {
                background: $bg1;
             }
          }
-
-         &.active {
-            transition: $transition-background;
-            background: $bg2;
-         }
-      }
-
-      .workspace-button {
-         font-weight: normal;
-         color: $fg0;
-         background: transparent;
-         padding: 0 8px;
       }
    }
 

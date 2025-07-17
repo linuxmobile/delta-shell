@@ -1,5 +1,6 @@
 import { compositor } from "@/options";
 import { bash } from "@/utils/utils";
+import BarItem from "@/widgets/common/baritem";
 import { createState, onCleanup } from "ags";
 import AstalHyprland from "gi://AstalHyprland?version=0.1";
 const hyprland = AstalHyprland.get_default();
@@ -33,8 +34,7 @@ export function Keyboard_Hypr() {
    });
 
    return (
-      <button
-         cssClasses={["bar-item", "keyboard"]}
+      <BarItem
          onClicked={async () => {
             const device = await bash(
                `hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .name'`,
@@ -51,6 +51,6 @@ export function Keyboard_Hypr() {
          }}
       >
          <label label={layout_name} />
-      </button>
+      </BarItem>
    );
 }

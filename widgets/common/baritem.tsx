@@ -1,9 +1,9 @@
 import { Gtk } from "ags/gtk4";
-import { CCProps, onCleanup } from "ags";
+import { CCProps, onCleanup, FCProps } from "ags";
 import app from "ags/gtk4/app";
 import options from "@/options";
 
-type BarItemProps = CCProps<Gtk.Button, Gtk.Button.ConstructorProps> & {
+type BarItemProps = JSX.IntrinsicElements["button"] & {
    window?: string;
    children: any;
 };

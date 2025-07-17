@@ -3,31 +3,12 @@ import app from "ags/gtk4/app";
 import { Gdk, Gtk } from "ags/gtk4";
 import { onCleanup } from "ags";
 import options from "@/options";
+import BarItem from "@/widgets/common/baritem";
 const { name, page } = options.launcher;
 
 export function Launcher() {
-   let appconnect: number;
-
-   onCleanup(() => {
-      if (appconnect) app.disconnect(appconnect);
-   });
-
    return (
-      <box
-         cssClasses={["bar-item", "launcher"]}
-         $={(self) => {
-            appconnect = app.connect("window-toggled", (_, win) => {
-               const winName = win.name;
-               const visible = win.visible;
-
-               if (winName == name) {
-                  self[visible ? "add_css_class" : "remove_css_class"](
-                     "active",
-                  );
-               }
-            });
-         }}
-      >
+      <BarItem window={options.launcher.name}>
          <Gtk.GestureClick
             onPressed={(ctrl, _, x, y) => {
                const button = ctrl.get_current_button();
@@ -42,6 +23,6 @@ export function Launcher() {
             button={0}
          />
          <image iconName={icons.search} pixelSize={20} />
-      </box>
+      </BarItem>
    );
 }

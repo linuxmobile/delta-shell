@@ -105,7 +105,7 @@ function getCompositor() {
       case "niri":
          return "niri";
       case "Hyprland":
-         return "Hyprland";
+         return "hyprland";
       default:
          return "unknown";
    }

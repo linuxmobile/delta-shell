@@ -5,6 +5,7 @@ import { createBinding, createComputed, For } from "ags";
 import options, { compositor } from "@/options";
 import { bash } from "@/utils/utils";
 import { icons } from "@/utils/icons";
+import BarItem from "@/widgets/common/baritem";
 const niri = AstalNiri.get_default();
 
 type AppButtonProps = {
@@ -69,7 +70,7 @@ function WorkspaceButton({ ws }: { ws: AstalNiri.Workspace }) {
    );
 
    const classNames = createBinding(niri, "focusedWorkspace").as((fws) => {
-      const classes = ["workspace-container"];
+      const classes = ["bar-item"];
 
       const active = fws?.id == ws.id;
       if (active) {
@@ -80,10 +81,8 @@ function WorkspaceButton({ ws }: { ws: AstalNiri.Workspace }) {
    });
 
    return (
-      <box cssClasses={classNames}>
-         <button class={"workspace-button"} onClicked={() => ws.focus()}>
-            <label label={ws.idx.toString()} />
-         </button>
+      <BarItem cssClasses={classNames} onClicked={() => ws.focus()}>
+         <label class={"workspace"} label={ws.idx.toString()} />
          <For each={clients}>
             {(client: AstalNiri.Window) => {
                for (const app of application.list) {
@@ -100,7 +99,7 @@ function WorkspaceButton({ ws }: { ws: AstalNiri.Workspace }) {
                return <AppButton client={client} />;
             }}
          </For>
-      </box>
+      </BarItem>
    );
 }
 

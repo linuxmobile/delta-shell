@@ -11,18 +11,13 @@ import {
 import app from "ags/gtk4/app";
 import { createBinding, createComputed, onCleanup } from "ags";
 import options from "@/options";
+import BarItem from "@/widgets/common/baritem";
 const battery = AstalBattery.get_default();
 const bluetooth = AstalBluetooth.get_default();
 const network = AstalNetwork.get_default();
 const notifd = AstalNotifd.get_default();
 
 export function SysBox() {
-   let appconnect: number;
-
-   onCleanup(() => {
-      if (appconnect) app.disconnect(appconnect);
-   });
-
    const bluetoothconnected = createComputed(
       [
          createBinding(bluetooth, "devices"),
@@ -37,23 +32,11 @@ export function SysBox() {
    );
 
    return (
-      <button
+      <BarItem
+         window={options.control.name}
          onClicked={() => app.toggle_window(options.control.name)}
-         cssClasses={["bar-item", "sysbox"]}
-         $={(self) => {
-            appconnect = app.connect("window-toggled", (_, win) => {
-               const winName = win.name;
-               const visible = win.visible;
-
-               if (winName == options.control.name) {
-                  self[visible ? "add_css_class" : "remove_css_class"](
-                     "active",
-                  );
-               }
-            });
-         }}
       >
-         <box spacing={8}>
+         <box spacing={options.bar.spacing}>
             <image
                visible={createBinding(network.wifi, "enabled")}
                pixelSize={20}
@@ -67,6 +50,6 @@ export function SysBox() {
                iconName={BatteryIcon}
             />
          </box>
-      </button>
+      </BarItem>
    );
 }

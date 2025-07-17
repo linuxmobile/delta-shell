@@ -5,6 +5,7 @@ import AstalApps from "gi://AstalApps?version=0.1";
 import { createBinding, createComputed, For } from "ags";
 import options from "@/options";
 import { icons } from "@/utils/icons";
+import BarItem from "@/widgets/common/baritem";
 const hyprland = AstalHyprland.get_default();
 
 type AppButtonProps = {
@@ -78,7 +79,7 @@ function WorkspaceButton({ ws }: { ws: AstalHyprland.Workspace }) {
    );
 
    const classNames = createBinding(hyprland, "focusedWorkspace").as((fws) => {
-      const classes = ["workspace-container"];
+      const classes = ["bar-item"];
 
       const active = fws.id == ws.id;
       active && classes.push("active");
@@ -87,10 +88,8 @@ function WorkspaceButton({ ws }: { ws: AstalHyprland.Workspace }) {
    });
 
    return (
-      <box cssClasses={classNames}>
-         <button class={"workspace-button"} onClicked={() => ws.focus()}>
-            <label label={ws.id.toString()} />
-         </button>
+      <BarItem cssClasses={classNames}>
+         <label class={"workspace"} label={ws.id.toString()} />
          <For each={clients}>
             {(client) => {
                for (const app of application.list) {
@@ -107,7 +106,7 @@ function WorkspaceButton({ ws }: { ws: AstalHyprland.Workspace }) {
                return <AppButton client={client} />;
             }}
          </For>
-      </box>
+      </BarItem>
    );
 }
 

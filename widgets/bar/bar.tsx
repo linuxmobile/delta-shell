@@ -9,12 +9,17 @@ import { RecordIndicator } from "./items/recordindicator";
 import { Keyboard } from "./items/keyboard";
 import options, { compositor } from "@/options";
 import AstalNiri from "gi://AstalNiri?version=0.1";
-import { onCleanup } from "../../../../../../usr/share/ags/js/gnim/src/jsx";
+import { onCleanup } from "ags";
 const { name, position, spacing } = options.bar;
 
 function Start() {
    return (
-      <box $type="start" spacing={spacing}>
+      <box
+         $type={"start"}
+         class={"modules-start"}
+         spacing={spacing}
+         $={(self) => self.get_first_child()?.add_css_class("first-child")}
+      >
          <Launcher />
          <Workspaces />
       </box>
@@ -23,7 +28,7 @@ function Start() {
 
 function Center() {
    return (
-      <box $type={"center"} spacing={spacing}>
+      <box $type={"center"} class={"modules-center"} spacing={spacing}>
          <Clock />
       </box>
    );
@@ -31,7 +36,12 @@ function Center() {
 
 function End() {
    return (
-      <box $type="end" spacing={spacing}>
+      <box
+         $type={"end"}
+         class={"modules-end"}
+         spacing={spacing}
+         $={(self) => self.get_last_child()?.add_css_class("last-child")}
+      >
          <RecordIndicator />
          <Tray />
          <Keyboard />
