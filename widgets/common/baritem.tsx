@@ -24,8 +24,7 @@ export default function BarItem({
          class={"bar-item"}
          $={(self) => {
             if (window) {
-               let appconnect: number;
-               appconnect = app.connect("window-toggled", (_, win) => {
+               const appconnect = app.connect("window-toggled", (_, win) => {
                   const winName = win.name;
                   if (winName !== window) return;
                   const visible = win.visible;
@@ -33,9 +32,7 @@ export default function BarItem({
                      "active",
                   );
                });
-               onCleanup(() => {
-                  if (appconnect) app.disconnect(appconnect);
-               });
+               onCleanup(() => app.disconnect(appconnect));
             }
          }}
          {...rest}
