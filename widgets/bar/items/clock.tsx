@@ -17,7 +17,7 @@ export function Clock() {
    return (
       <BarItem
          window={options.calendar.name}
-         onClicked={() => app.toggle_window(options.calendar.name)}
+         onPrimaryClick={() => app.toggle_window(options.calendar.name)}
       >
          <label label={time((t) => t)} />
       </BarItem>

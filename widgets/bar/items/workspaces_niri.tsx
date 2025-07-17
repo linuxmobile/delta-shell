@@ -81,7 +81,7 @@ function WorkspaceButton({ ws }: { ws: AstalNiri.Workspace }) {
    });
 
    return (
-      <BarItem cssClasses={classNames} onClicked={() => ws.focus()}>
+      <BarItem cssClasses={classNames} onPrimaryClick={() => ws.focus()}>
          <label class={"workspace"} label={ws.idx.toString()} />
          <For each={clients}>
             {(client: AstalNiri.Window) => {

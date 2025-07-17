@@ -1,20 +1,26 @@
-import { Gtk } from "ags/gtk4";
+import { Gdk, Gtk } from "ags/gtk4";
 import { CCProps, onCleanup, FCProps } from "ags";
 import app from "ags/gtk4/app";
 import options from "@/options";
 
-type BarItemProps = JSX.IntrinsicElements["button"] & {
+type BarItemProps = JSX.IntrinsicElements["box"] & {
    window?: string;
    children: any;
+   onPrimaryClick?: () => void;
+   onSecondaryClick?: () => void;
+   onMiddleClick?: () => void;
 };
 
 export default function BarItem({
    window = "",
    children,
+   onPrimaryClick = () => {},
+   onSecondaryClick = () => {},
+   onMiddleClick = () => {},
    ...rest
 }: BarItemProps) {
    return (
-      <button
+      <box
          class={"bar-item"}
          $={(self) => {
             if (window) {
@@ -34,7 +40,20 @@ export default function BarItem({
          }}
          {...rest}
       >
+         <Gtk.GestureClick
+            onPressed={(ctrl, _, x, y) => {
+               const button = ctrl.get_current_button();
+               if (button === Gdk.BUTTON_PRIMARY) {
+                  onPrimaryClick();
+               } else if (button === Gdk.BUTTON_SECONDARY) {
+                  onSecondaryClick();
+               } else if (button === Gdk.BUTTON_MIDDLE) {
+                  onMiddleClick();
+               }
+            }}
+            button={0}
+         />
          <box class={"content"}>{children}</box>
-      </button>
+      </box>
    );
 }

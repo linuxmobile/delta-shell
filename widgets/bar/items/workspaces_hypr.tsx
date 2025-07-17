@@ -88,7 +88,7 @@ function WorkspaceButton({ ws }: { ws: AstalHyprland.Workspace }) {
    });
 
    return (
-      <BarItem cssClasses={classNames}>
+      <BarItem cssClasses={classNames} onPrimaryClick={() => ws.focus()}>
          <label class={"workspace"} label={ws.id.toString()} />
          <For each={clients}>
             {(client) => {

@@ -34,7 +34,7 @@ export function SysBox() {
    return (
       <BarItem
          window={options.control.name}
-         onClicked={() => app.toggle_window(options.control.name)}
+         onPrimaryClick={() => app.toggle_window(options.control.name)}
       >
          <box spacing={options.bar.spacing}>
             <image

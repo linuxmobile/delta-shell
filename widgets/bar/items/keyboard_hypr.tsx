@@ -35,7 +35,7 @@ export function Keyboard_Hypr() {
 
    return (
       <BarItem
-         onClicked={async () => {
+         onPrimaryClick={async () => {
             const device = await bash(
                `hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .name'`,
             );

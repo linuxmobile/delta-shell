@@ -9,7 +9,7 @@ export function RecordIndicator() {
    return (
       <BarItem
          visible={createBinding(screenRecord, "recording")}
-         onClicked={() => screenRecord.stop().catch(() => "")}
+         onPrimaryClick={() => screenRecord.stop().catch(() => "")}
       >
          <box spacing={options.bar.spacing}>
             <box class={"record-indicator"} valign={Gtk.Align.CENTER} />

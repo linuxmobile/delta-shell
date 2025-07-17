@@ -38,7 +38,7 @@ export const Tray = () => {
                </For>
             </box>
          </revealer>
-         <BarItem onClicked={() => tray_visible_set((v) => !v)}>
+         <BarItem onPrimaryClick={() => tray_visible_set((v) => !v)}>
             <image
                iconName={tray_visible((v) =>
                   v ? icons.arrow.right : icons.arrow.left,

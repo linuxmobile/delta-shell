@@ -33,7 +33,7 @@ export function Keyboard_Niri() {
 
    return (
       <BarItem
-         onClicked={() => bash("niri msg action switch-layout next")}
+         onPrimaryClick={() => bash("niri msg action switch-layout next")}
          $={() => {
             niriconnect = niri.connect("keyboard-layout-switched", () => {
                updateLayout();

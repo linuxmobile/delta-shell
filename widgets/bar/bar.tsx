@@ -65,22 +65,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
             (p) => (p === "top" ? TOP : BOTTOM) | LEFT | RIGHT,
          )}
          application={app}
-         $={(self) => {
-            if (compositor.get() === "niri") {
-               let niriconnect: number;
-               onCleanup(() => {
-                  if (niriconnect) niri.disconnect(niriconnect);
-               });
-               const niri = AstalNiri.get_default();
-               niriconnect = niri.connect(
-                  "overview-opened-or-closed",
-                  (_, opened) => {
-                     if (opened) self.set_exclusivity(Astal.Exclusivity.IGNORE);
-                     else self.set_exclusivity(Astal.Exclusivity.EXCLUSIVE);
-                  },
-               );
-            }
-         }}
       >
          <centerbox class={"bar-main"} heightRequest={options.bar.height}>
             <Start />
