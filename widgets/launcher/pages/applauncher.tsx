@@ -9,7 +9,7 @@ const { name, page } = options.launcher;
 const apps = new Apps.Apps();
 const [text, text_set] = createState("");
 let scrolled: Gtk.ScrolledWindow;
-const list = text((text) => apps.fuzzy_query(text));
+const list = text.as((text) => apps.fuzzy_query(text));
 
 function Entry() {
    let appconnect: number;

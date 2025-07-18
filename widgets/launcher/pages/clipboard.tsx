@@ -5,7 +5,7 @@ import { icons } from "../../../utils/icons";
 import { ClipImage } from "../items/clip_image";
 import { ClipText } from "../items/clip_text";
 import { ClipColor } from "../items/clip_color";
-import { createState, For, onCleanup } from "ags";
+import { createComputed, createState, For, onCleanup } from "ags";
 import options from "@/options";
 const { name, page } = options.launcher;
 
@@ -23,8 +23,8 @@ const [text, text_set] = createState("");
 const [cachedList, cachedList_set] = createState<string[]>([]);
 let scrolled: Gtk.ScrolledWindow;
 
-const list = text((text) => {
-   return cachedList.get().filter((entry) => {
+const list = createComputed([cachedList, text], (cachedList, text) => {
+   return cachedList.filter((entry) => {
       if (!text) return true;
       const content = entry.split("\t").slice(1).join(" ").trim();
       return content.toLowerCase().includes(text.toLowerCase());
@@ -35,7 +35,6 @@ async function loadInitialList() {
    if (!dependencies("cliphist")) return;
 
    try {
-      cachedList_set(null);
       const list = await bash("cliphist list");
       cachedList_set(list.split("\n").filter((line) => line.trim()));
       text_set("init");
