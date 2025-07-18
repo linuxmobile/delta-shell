@@ -10,6 +10,7 @@ const notifd = AstalNotifd.get_default();
 const { name, margin, timeout } = options.notifications_popup;
 
 export function NotificationPopup(gdkmonitor: Gdk.Monitor) {
+   let contentbox: Gtk.Box;
    const [notifications, notifications_set] = createState(
       new Array<AstalNotifd.Notification>(),
    );
@@ -50,10 +51,15 @@ export function NotificationPopup(gdkmonitor: Gdk.Monitor) {
          name={name}
          visible={notifications((ns) => ns.length > 0)}
          anchor={Astal.WindowAnchor.TOP}
+         onNotifyVisible={({ visible }) => {
+            if (visible) contentbox.grab_focus();
+         }}
       >
          <box
+            $={(self) => (contentbox = self)}
             orientation={Gtk.Orientation.VERTICAL}
             spacing={options.theme.spacing}
+            focusable
             marginTop={margin}
             marginBottom={margin}
          >
