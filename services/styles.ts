@@ -1,6 +1,6 @@
 import { monitorFile, writeFileAsync } from "ags/file";
 import app from "ags/gtk4/app";
-import { bash, dependencies, gsettings } from "@/utils/utils";
+import { bash, dependencies } from "@/utils/utils";
 import options from "@/options";
 import { Opt } from "@/utils/options";
 import GLib from "gi://GLib?version=2.0";
@@ -25,8 +25,8 @@ const variables = () => [
    $("fg1", theme.fg[1].get()),
    $("fg2", theme.fg[2].get()),
 
-   $("accent1", getAccent(theme.accent.get())),
-   $("accent2", `lighten(${getAccent(theme.accent.get())}, 10%)`),
+   $("accent1", theme.accent.get()),
+   $("accent2", `lighten(${theme.accent.get()}, 10%)`),
    $("blue1", theme.blue.get()),
    $("blue2", `lighten(${theme.blue.get()}, 10%)`),
    $("green1", theme.green.get()),
@@ -40,8 +40,8 @@ const variables = () => [
    $("purple1", theme.purple.get()),
    $("purple", `lighten(${theme.purple.get()}, 10%)`),
 
-   $("border-color", theme.bg[2].get()),
-   $("outline-color", theme.fg[1].get()),
+   $("border-color", border.color.get()),
+   $("outline-color", outline.color.get()),
 
    $("outline-width", `${outline.width.get()}px`),
    $("border-width", `${border.width.get()}px`),

@@ -19,16 +19,7 @@ const options = mkOptions(configFile, {
          1: opt("#c0c0c0"),
          2: opt("#808080"),
       },
-      accent: opt<
-         | "blue"
-         | "teel"
-         | "green"
-         | "yellow"
-         | "orange"
-         | "red"
-         | "purple"
-         | "slate"
-      >("yellow"),
+      accent: opt("#c88800"),
       blue: opt("#3584e4"),
       teel: opt("#2190a4"),
       green: opt("#3a944a"),
@@ -39,9 +30,11 @@ const options = mkOptions(configFile, {
       slate: opt("#6f8396"),
       border: {
          width: opt(1),
+         color: opt("#36363a"),
       },
       outline: {
          width: opt(1),
+         color: opt("#c0c0c0"),
       },
       main_padding: opt(15),
       spacing: opt(10),
@@ -49,7 +42,7 @@ const options = mkOptions(configFile, {
    },
    transition: opt(200),
    font: {
-      size: opt(12),
+      size: opt(14),
       name: opt("Rubik"),
    },
    bar: {
