@@ -1,5 +1,11 @@
 import GObject, { register, getter } from "ags/gobject";
-import { bash, ensureDirectory, notifySend, now } from "@/utils/utils";
+import {
+   bash,
+   dependencies,
+   ensureDirectory,
+   notifySend,
+   now,
+} from "@/utils/utils";
 import GLib from "gi://GLib?version=2.0";
 import { interval, Time } from "ags/time";
 
@@ -31,6 +37,7 @@ export default class ScreenRecord extends GObject.Object {
    }
 
    async start() {
+      if (!dependencies("gpu-screen-recorder")) return;
       if (this.#recording) return;
 
       ensureDirectory(this.#recordings);
