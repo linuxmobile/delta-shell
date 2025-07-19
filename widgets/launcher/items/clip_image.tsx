@@ -46,7 +46,6 @@ export function ClipImage({
          <button
             cssClasses={["launcher-button", "clipbutton", "image-content"]}
             hexpand
-            vexpand
             onClicked={() => {
                bash(`cliphist decode ${id} | wl-copy`);
                hide_all_windows();
