@@ -51,7 +51,7 @@ yay -S aylurs-gtk-shell-git libastal-meta brightnessctl dart-sass fd bluez tuned
 If you use Nix or NixOS, you can run Delta Shell with all dependencies managed automatically:
 
 ```bash
-nix run github:sameoldlab/delta-shell
+nix run github:Sinomor/delta-shell
 ```
 
 For development, enter a shell with all dependencies:
