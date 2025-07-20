@@ -1,5 +1,7 @@
 import app from "ags/gtk4/app";
 import options from "./options";
+import ScreenRecord from "./services/screenrecord";
+const screenrecord = ScreenRecord.get_default();
 
 export default function request(
    request: string,
@@ -19,9 +21,19 @@ export default function request(
          default:
             print("Unknown request:", request);
             return res("Unknown request");
+            break;
       }
       return res("ok");
    } else {
-      return res("Unknown request");
+      switch (args[0]) {
+         case "screenrecord":
+            screenrecord.start();
+            break;
+         default:
+            print("Unknown request:", request);
+            return res("Unknown request");
+            break;
+      }
+      return res("ok");
    }
 }
