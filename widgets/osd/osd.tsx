@@ -4,11 +4,10 @@ import { timeout } from "ags/time";
 import Wp from "gi://AstalWp";
 import Gtk from "gi://Gtk";
 import { icons, VolumeIcon } from "@/utils/icons";
-import { Accessor, createState } from "ags";
+import { Accessor, createState, onCleanup } from "ags";
 import options from "@/options";
 import Brightness from "@/services/brightness";
 const { name, margin, width } = options.osd;
-
 const [visible, visible_set] = createState(false);
 
 function OnScreenProgress({ visible }: { visible: Accessor<boolean> }) {
@@ -17,8 +16,8 @@ function OnScreenProgress({ visible }: { visible: Accessor<boolean> }) {
 
    const [iconName, iconName_set] = createState("");
    const [value, value_set] = createState(0);
+   const [firstStart, setFirstStart] = createState(true);
    let count = 0;
-   let firstStart = true;
 
    function show(v: number, icon: string) {
       visible_set(true);
@@ -36,19 +35,35 @@ function OnScreenProgress({ visible }: { visible: Accessor<boolean> }) {
       <box
          $={() => {
             if (brightness) {
-               brightness.connect("notify::screen", () => {
-                  show(brightness.screen, icons.brightness);
-               });
+               const brightnessconnect = brightness.connect(
+                  "notify::screen",
+                  () => {
+                     show(brightness.screen, icons.brightness);
+                  },
+               );
+               onCleanup(() => brightness.disconnect(brightnessconnect));
             }
 
             if (speaker) {
-               speaker.connect("notify::volume", () => {
-                  if (firstStart) {
-                     firstStart = false;
+               const volumeconnect = speaker.connect("notify::volume", () => {
+                  if (firstStart.as((v) => v)) {
+                     setFirstStart(false);
                      return;
                   }
-
                   show(speaker.volume, VolumeIcon.get());
+               });
+
+               const muteconnect = speaker.connect("notify::mute", () => {
+                  if (firstStart.as((v) => v)) {
+                     setFirstStart(false);
+                     return;
+                  }
+                  show(speaker.volume, VolumeIcon.get());
+               });
+
+               onCleanup(() => {
+                  speaker.disconnect(volumeconnect);
+                  speaker.disconnect(muteconnect);
                });
             }
          }}
