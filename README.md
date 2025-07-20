@@ -21,6 +21,68 @@ nix develop
 
 No manual installation of dependencies is required when using Nix.
 
+## NixOS & Home Manager Integration
+
+Delta Shell provides both a NixOS module and a Home Manager module for easy, declarative configuration via your flake.
+
+### Flake Outputs
+
+- **NixOS module:** `nixosModules.default`
+- **Home Manager module:** `homeManagerModules.default`
+- **Package:** `packages.x86_64-linux.default`
+
+You can check these outputs with:
+```bash
+nix flake show github:sameoldlab/delta-shell
+```
+
+### Example: NixOS Configuration
+
+Add the module to your NixOS configuration in your flake:
+```nix
+{
+  inputs.delta-shell.url = "github:sameoldlab/delta-shell";
+  outputs = { self, nixpkgs, ... }: {
+    nixosConfigurations.myhost = nixpkgs.lib.nixosSystem {
+      modules = [
+        self.nixosModules.default
+        # ...other modules
+      ];
+      configuration = {
+        services.delta-shell.enable = true;
+      };
+    };
+  };
+}
+```
+
+### Example: Home Manager Configuration
+
+Add the module to your Home Manager configuration in your flake:
+```nix
+{
+  inputs.delta-shell.url = "github:sameoldlab/delta-shell";
+  outputs = { self, nixpkgs, home-manager, ... }: {
+    homeConfigurations.myuser = home-manager.lib.homeManagerConfiguration {
+      modules = [
+        self.homeManagerModules.default
+        # ...other modules
+      ];
+      configuration = {
+        programs.delta-shell.enable = true;
+        programs.delta-shell.config = {
+          # ...your config here, as a Nix attrset (will be written as JSON)
+        };
+      };
+    };
+  };
+}
+```
+
+**Note:**
+- The Home Manager module writes your configuration to `~/.config/delta-shell/config.json`.
+- The NixOS module simply installs the package system-wide.
+
 ## Dependencies
 
 > **Note:** If you use Nix, you can skip this section. All dependencies are handled by the flake.

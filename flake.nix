@@ -22,6 +22,7 @@
     astal,
     astal_niri,
     ags,
+    ...
   }: let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
@@ -66,6 +67,15 @@
           --sourcemap=inline \
           --external:gi://\*
       '';
+    };
+
+    nixosModules.default = import ./nix/modules.nix {
+      lib = nixpkgs.lib;
+      pkgs = pkgs;
+    };
+    homeManagerModules.default = import ./nix/modules.nix {
+      lib = nixpkgs.lib;
+      pkgs = pkgs;
     };
   };
 }
