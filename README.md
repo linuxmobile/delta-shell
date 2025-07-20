@@ -1,29 +1,9 @@
 # Delta Shell
 
 A desktop shell based on [Ags](https://github.com/Aylur/ags). Currently supports Hyprland and Niri.
-<br>
-
 ![image](https://i.imgur.com/vBy0QRd.png)
 
-## Nix/NixOS
-
-If you use Nix or NixOS, you can run Delta Shell with all dependencies managed automatically:
-
-```bash
-nix run github:sameoldlab/delta-shell
-```
-
-For development, enter a shell with all dependencies:
-
-```bash
-nix develop
-```
-
-No manual installation of dependencies is required when using Nix.
-
 ## Dependencies
-
-> **Note:** If you use Nix, you can skip this section. All dependencies are handled by the flake.
 
 ### Required
 
@@ -43,16 +23,46 @@ No manual installation of dependencies is required when using Nix.
 - `cliphist` for clipboard
 - `gpu-screen-recorder` to record screen from control center
 
-```bash
-yay -S aylurs-gtk-shell-git libastal-meta brightnessctl dart-sass fd bluez tuned-ppd cliphist gpu-screen-recorder
-```
+## Installation
+
+<details>
+<summary><b>Arch Linux</b></summary>
+
+1. Installation libastal-niri-git
 
 ```bash
-mkdir libastal-niri-git
+mkdir -p libastal-niri-git
 cd libastal-niri-git
 wget https://raw.githubusercontent.com/Sinomor/PKGBUILDS/refs/heads/main/libastal-niri-git/PKGBUILD
 makepkg -si
 ```
+
+2. Installation other dependencies
+
+```bash
+yay -S aylurs-gtk-shell-git libastal-meta brightnessctl dart-sass fd bluez tuned-ppd cliphist gpu-screen-recorder
+```
+
+</details>
+
+<details>
+<summary><b>NixOS</b></summary>
+
+If you use Nix or NixOS, you can run Delta Shell with all dependencies managed automatically:
+
+```bash
+nix run github:sameoldlab/delta-shell
+```
+
+For development, enter a shell with all dependencies:
+
+```bash
+nix develop
+```
+
+No manual installation of dependencies is required when using Nix.
+
+</details>
 
 ## Configuration
 
