@@ -16,7 +16,7 @@ function OnScreenProgress({ visible }: { visible: Accessor<boolean> }) {
 
    const [iconName, iconName_set] = createState("");
    const [value, value_set] = createState(0);
-   const [firstStart, setFirstStart] = createState(true);
+   let firstStart = true;
    let count = 0;
 
    function show(v: number, icon: string) {
@@ -43,24 +43,16 @@ function OnScreenProgress({ visible }: { visible: Accessor<boolean> }) {
                );
                onCleanup(() => brightness.disconnect(brightnessconnect));
             }
-
+            timeout(500, () => (firstStart = false));
             if (speaker) {
                const volumeconnect = speaker.connect("notify::volume", () => {
-                  if (firstStart.as((v) => v)) {
-                     setFirstStart(false);
-                     return;
-                  }
+                  if (firstStart) return;
                   show(speaker.volume, VolumeIcon.get());
                });
-
                const muteconnect = speaker.connect("notify::mute", () => {
-                  if (firstStart.as((v) => v)) {
-                     setFirstStart(false);
-                     return;
-                  }
+                  if (firstStart) return;
                   show(speaker.volume, VolumeIcon.get());
                });
-
                onCleanup(() => {
                   speaker.disconnect(volumeconnect);
                   speaker.disconnect(muteconnect);
