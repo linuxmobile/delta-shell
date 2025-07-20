@@ -5,7 +5,25 @@ A desktop shell based on [Ags](https://github.com/Aylur/ags). Currently supports
 
 ![image](https://i.imgur.com/vBy0QRd.png)
 
+## Nix/NixOS
+
+If you use Nix or NixOS, you can run Delta Shell with all dependencies managed automatically:
+
+```bash
+nix run github:sameoldlab/delta-shell
+```
+
+For development, enter a shell with all dependencies:
+
+```bash
+nix develop
+```
+
+No manual installation of dependencies is required when using Nix.
+
 ## Dependencies
+
+> **Note:** If you use Nix, you can skip this section. All dependencies are handled by the flake.
 
 ### Required
 
