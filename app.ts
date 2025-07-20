@@ -7,10 +7,14 @@ import Gio from "gi://Gio?version=2.0";
 app.start({
    icons: `${SRC}/assets/icons`,
    instanceName: "delta-shell",
-   main() {
-      windows.map((win) => app.get_monitors().map(win));
-   },
-   requestHandler(req, res) {
-      request(req, res);
-   },
+main() {
+    const monitors = app.get_monitors();
+    windows.forEach(({ fn, perMonitor }) => {
+        if (perMonitor) {
+            monitors.forEach(monitor => fn(monitor));
+        } else {
+            fn(monitors[0]); // Only call once, pass first monitor for API compatibility
+        }
+    });
+},
 });

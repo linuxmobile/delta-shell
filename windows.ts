@@ -18,13 +18,21 @@ export function hide_all_windows() {
    options.control.page.set("main");
 }
 
-export default [
-   Bar,
-   OSD,
-   Launcher,
-   NotificationPopup,
-   Control,
-   Powermenu,
-   Verification,
-   Calendar,
+const monitors = app.get_monitors();
+
+const windows = [
+    // Bar only on first monitor
+    { fn: (monitor) => monitor === monitors[0] ? Bar(monitor) : null, perMonitor: true },
+    // OSD only on first monitor
+    { fn: (monitor) => monitor === monitors[0] ? OSD(monitor) : null, perMonitor: true },
+    // NotificationPopup per monitor
+    { fn: NotificationPopup, perMonitor: true },
+    // The rest are global
+    { fn: Launcher, perMonitor: false },
+    { fn: Control, perMonitor: false },
+    { fn: Powermenu, perMonitor: false },
+    { fn: Verification, perMonitor: false },
+    { fn: Calendar, perMonitor: false },
 ];
+
+export default windows;

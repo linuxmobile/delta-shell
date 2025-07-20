@@ -97,8 +97,6 @@ function getCompositor() {
    switch (env) {
       case "niri":
          return "niri";
-      case "Hyprland":
-         return "hyprland";
       default:
          return "unknown";
    }
