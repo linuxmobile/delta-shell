@@ -20,7 +20,7 @@ A desktop shell based on [Ags](https://github.com/Aylur/ags). Currently supports
 
 ### Optional
 
-- `cliphist` for clipboard
+- `cliphist` and `wl-clipboard` for clipboard
 - `gpu-screen-recorder` to record screen from control center
 
 ## Installation
@@ -40,7 +40,7 @@ makepkg -si
 2. Installation other dependencies
 
 ```bash
-yay -S aylurs-gtk-shell-git libastal-meta brightnessctl dart-sass fd bluez tuned-ppd cliphist gpu-screen-recorder
+yay -S aylurs-gtk-shell-git libastal-meta brightnessctl dart-sass fd bluez tuned-ppd cliphist gpu-screen-recorder wl-clipboard
 ```
 
 </details>
@@ -63,6 +63,16 @@ nix develop
 No manual installation of dependencies is required when using Nix.
 
 </details>
+
+```bash
+git clone https://github.com/Sinomor/delta-shell.git ~/.config/ags
+```
+
+And then you can run it with
+
+```bash
+ags run
+```
 
 ## Configuration
 
