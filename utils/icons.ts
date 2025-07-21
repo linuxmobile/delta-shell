@@ -87,9 +87,9 @@ export function getVolumeIcon(speaker?: AstalWp.Endpoint) {
 
    if (volume === 0 || muted) {
       return icons.volume.muted;
-   } else if (volume < 0.1) {
+   } else if (volume < 0.33) {
       return icons.volume.low;
-   } else if (volume < 0.7) {
+   } else if (volume < 0.66) {
       return icons.volume.medium;
    } else {
       return icons.volume.high;
