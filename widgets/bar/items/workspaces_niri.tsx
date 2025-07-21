@@ -107,9 +107,26 @@ export function Workspaces_Niri() {
    const workspaces = createBinding(niri, "workspaces").as((workspaces) =>
       workspaces.sort((a, b) => a.id - b.id),
    );
+   let lastScrollTime = 0;
+   const scrollDelay = 400;
 
    return (
       <box spacing={options.bar.spacing} class={"workspaces"}>
+         <Gtk.EventControllerScroll
+            flags={Gtk.EventControllerScrollFlags.VERTICAL}
+            onScroll={(event, dx, dy) => {
+               const now = Date.now();
+               if (now - lastScrollTime < scrollDelay) return;
+
+               lastScrollTime = now;
+
+               if (dy < 0) {
+                  AstalNiri.msg.focus_workspace_up();
+               } else if (dy > 0) {
+                  AstalNiri.msg.focus_workspace_down();
+               }
+            }}
+         />
          <For each={workspaces}>{(ws) => <WorkspaceButton ws={ws} />}</For>
       </box>
    );

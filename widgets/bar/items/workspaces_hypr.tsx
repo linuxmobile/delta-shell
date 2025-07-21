@@ -114,9 +114,26 @@ export function Workspaces_Hypr() {
    const workspaces = createBinding(hyprland, "workspaces").as((workspaces) =>
       workspaces.sort((a, b) => a.id - b.id),
    );
+   let lastScrollTime = 0;
+   const scrollDelay = 400;
 
    return (
       <box spacing={options.bar.spacing} class={"workspaces"}>
+         <Gtk.EventControllerScroll
+            flags={Gtk.EventControllerScrollFlags.VERTICAL}
+            onScroll={(event, dx, dy) => {
+               const now = Date.now();
+               if (now - lastScrollTime < scrollDelay) return;
+
+               lastScrollTime = now;
+
+               if (dy < 0) {
+                  hyprland.dispatch("workspace", "+1");
+               } else if (dy > 0) {
+                  hyprland.dispatch("workspace", "-1");
+               }
+            }}
+         />
          <For each={workspaces}>{(ws) => <WorkspaceButton ws={ws} />}</For>
       </box>
    );
